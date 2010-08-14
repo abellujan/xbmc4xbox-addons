@@ -1,0 +1,22 @@
+#summary How to install the plugins/scripts available here using SVN Repo Installer
+#labels Featured,Phase-Deploy
+
+= Introduction =
+
+  You can use SVN Repo Installer to download and install the plugins and scripts available here.
+
+= Installation =
+
+  * Download the latest version of *SVN Repo Installer*:
+  http://xbmc-addons.googlecode.com/svn/packages/plugins/programs/SVN_Repo_Installer.zip
+
+  * Extract contents into *Q:\plugins\programs*
+
+  * Download the repository descriptor:
+  http://xbmc4xbox-addons.googlecode.com/files/xbmc4xbox-addons.zip
+
+  * Extract contents into *Q:\plugins\programs\SVN Repo Installer\resources\repositories\*
+
+    See http://xbmc4xbox.org/wiki/?title=HOW-TO_install_and_use_plugins_in_XBMC#Manually_installing_plugins for more details on program plugin locations.
+
+  * Run SVN Repo Installer and you will see a new *xbmc4xbox-addons* entry, through which you can install the plugins available here.
