@@ -7,11 +7,6 @@
 # Dan Dar3 
 # http://dandar3.blogspot.com
 #
-# Changelog:
-#
-# v1.0 (Saturday, 14 August 2010):
-# - initial release;
-#
 
 # 
 # Constants
@@ -19,8 +14,8 @@
 __plugin__  = "Wake on LAN"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://xbmc4xbox-addons.googlecode.com"
-__date__    = "14 August 2010"
-__version__ = "1.0 beta"
+__date__    = "28 September 2010"
+__version__ = "1.0"
 
 
 #
