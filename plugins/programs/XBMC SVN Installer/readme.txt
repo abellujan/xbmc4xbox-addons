@@ -1,4 +1,9 @@
 XBMC SVN Installer
+~~~~~~~~~~~~~~~~~~
+
+v1.6 (Sunday, 24 October 2010):
+ - news error in Confluence;
+ - Confluence skin;
 
 v1.5 (Sunday, 3 October 2010):
  - news (broken);

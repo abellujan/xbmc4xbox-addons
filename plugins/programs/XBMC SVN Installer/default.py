@@ -3,7 +3,7 @@
 # XBMC SVN Installer - Program plugin for XBMC
 # http://www.xbmcsvn.com/
 #
-# Version 1.5
+# Version 1.6
 # 
 # Author(s):
 #
@@ -24,8 +24,8 @@
 __plugin__  = "XBMC SVN Installer"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "3 October 2010"
-__version__ = "1.5"
+__date__    = "24 October 2010"
+__version__ = "1.6"
 
 #
 # Imports
@@ -43,7 +43,12 @@ sys.path.append (LIB_DIR)
 # News
 if ( "action=news" in sys.argv[ 2 ] ) :
     import xbmcsvn_news as plugin
-    gui = plugin.GUI( "DialogScriptInfo.xml", os.getcwd(), "default" )
+    try:
+        gui = plugin.GUI( "DialogTextViewer.xml", os.getcwd(), "default" )
+        del gui
+    except :
+        gui = plugin.GUI( "DialogScriptInfo.xml", os.getcwd(), "default" )
+        del gui
     
 # Skins - List
 elif ( "action=skins-list" in sys.argv[ 2 ] ):
