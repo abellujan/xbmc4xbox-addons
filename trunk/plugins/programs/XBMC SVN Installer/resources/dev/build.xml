@@ -4,19 +4,22 @@
 	<!--
 	 * Variables
 	 -->
-	<property name="project.version" value="1.5"/>
+	<property name="project.version" value="1.6"/>
 	
 	<!--
 	 * Package plugin for distribution
 	 -->
 	<target name="package" >
-		<!-- Init -->
-		<delete dir="${basedir}/resources/dev/zip" />
-		<mkdir  dir="${basedir}/resources/dev/zip/${ant.project.name}" />
+		<!-- Delete all zips and tmp location -->
+		<delete quiet="yes">
+			<fileset dir="${basedir}" includes="**/*.zip"/>
+			<fileset dir="${basedir}/tmp"/>
+		</delete>
+		<mkdir  dir="${basedir}/tmp"/>
 		
 		<!-- Copy entire project in a temporary location... -->
-		<copy todir="${basedir}/resources/dev/zip/${ant.project.name}">
-			<fileset dir="${basedir}">
+		<copy todir="${basedir}/tmp/${ant.project.name}">
+			<fileset dir="${basedir}/../../">
 				<exclude name=".svn"/>
 				<exclude name="**/*.pyo"/>
 				<exclude name="resources/dev/**"/>
@@ -26,12 +29,12 @@
 		</copy>
 		
 		<!-- Zip up... -->
-		<zip destfile="${basedir}/resources/dev/zip/${ant.project.name} v${project.version}.zip"
-		     basedir="${basedir}/resources/dev/zip/"
+		<zip destfile="${basedir}/${ant.project.name} v${project.version}.zip"
+		     basedir="${basedir}/tmp"
 			 level="9" />
 		
 		<!-- Clean up -->
-		<delete dir="${basedir}/resources/dev/zip/${ant.project.name}"/>
+		<delete dir="${basedir}/tmp"/>
 	</target>
 	
 </project>
