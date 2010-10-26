@@ -130,7 +130,7 @@ class Main:
     def fingShortcutCfg( self ):
         # Init...
         shortcut_cfg_path = None
-        drives            = [ "C:\\", "E:\\", "F:\\" ]
+        drives            = [ "C:\\", "E:\\", "F:\\", "E:\\Dash", "E:\\Dashboard" ]
 
         for drive in drives :
             files = glob.glob( os.path.join( drive, "*.cfg" ) )
