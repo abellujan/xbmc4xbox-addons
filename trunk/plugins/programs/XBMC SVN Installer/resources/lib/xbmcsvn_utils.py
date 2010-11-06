@@ -17,6 +17,38 @@ XBMC_BUILD_VERSION = system_info[1]
 XBMC_BUILD_DATE    = system_info[2]
 
 #
+# HTTP responses
+# See RFC 2616
+#
+HTTP_REPONSES = {
+    400: 'Bad request syntax or unsupported method',
+    401: 'No permission -- see authorization schemes',
+    402: 'No payment -- see charging schemes',
+    403: 'Request forbidden -- authorization will not help',
+    404: 'Nothing matches the given URI',
+    405: 'Specified method is invalid for this server.',
+    406: 'URI not available in preferred format.',
+    407: 'You must authenticate with this proxy before proceeding.',
+    408: 'Request timed out; try again later.',
+    409: 'Request conflict.',
+    410: 'URI no longer exists and has been permanently removed.',
+    411: 'Client must specify Content-Length.',
+    412: 'Precondition in headers is false.',
+    413: 'Entity is too large.',
+    414: 'URI is too long.',
+    415: 'Entity body in unsupported format.',
+    416: 'Cannot satisfy request range.',
+    417: 'Expect condition could not be satisfied.',
+
+    500: 'Internal Server Error',
+    501: 'Server does not support this operation',
+    502: 'Invalid responses from another server/proxy.',
+    503: 'The server cannot process the request due to a high load',
+    504: 'The gateway server did not receive a timely response',
+    505: 'HTTP Version Not Supported'
+}
+
+#
 # HTTPCommunicator
 #
 class HTTPCommunicator :
@@ -55,12 +87,16 @@ class HTTPCommunicator :
     def get( self, url ):
         h = urllib2.HTTPHandler(debuglevel=0)
         
-        request = urllib2.Request( url )
-        request.add_header( "Accept"         , "*/*" )
-        request.add_header( "Accept-Encoding", "gzip" )
-        request.add_header( "User-Agent"     , "Python-urllib/%s (%s; XBMC/%s, %s)" % ( urllib2.__version__, os.name.upper(), XBMC_BUILD_VERSION, XBMC_BUILD_DATE ) )
-        opener = urllib2.build_opener(h)
-        f = opener.open(request)
+        try :
+            request = urllib2.Request( url )
+            request.add_header( "Accept"         , "*/*" )
+            request.add_header( "Accept-Encoding", "gzip" )
+            request.add_header( "User-Agent"     , "Python-urllib/%s (%s; XBMC/%s, %s)" % ( urllib2.__version__, os.name.upper(), XBMC_BUILD_VERSION, XBMC_BUILD_DATE ) )
+            opener = urllib2.build_opener(h)
+            f = opener.open(request)
+        # Exception
+        except urllib2.HTTPError, e :
+            raise Exception( "HTTP Error %u: %s" % ( e.code, HTTP_REPONSES[ e.code ] ) )
 
         # Compressed (gzip) response...
         if f.headers.get( "content-encoding" ) == "gzip" :
@@ -82,7 +118,7 @@ class HTTPCommunicator :
 
         # Return value
         return htmlData
-    
+
 #
 # Convert HTML to readable strings...
 #
