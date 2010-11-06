@@ -41,7 +41,7 @@ class Main:
         # Init
         #
         html2text     = HTML2Text()
-        os_platform   = os.environ.get("OS")
+        os_platform   = os.getenv("OS")
 
         if os_platform == "xbox" :
             xbmc_revision = int( xbmcsvn_utils.XBMC_BUILD_VERSION[xbmcsvn_utils.XBMC_BUILD_VERSION.rfind('r') + 1 : ] )
@@ -58,8 +58,14 @@ class Main:
         #
         # Get HTML page...
         #
-        httpCommunicator = HTTPCommunicator()
-        htmlSource       = httpCommunicator.get( "http://www.sshcs.com/xbmc/?mode=SAPI" )
+        url = "http://www.xbmcsvn.com/?mode=SAPI"
+        try :
+            httpCommunicator = HTTPCommunicator()
+            htmlSource       = httpCommunicator.get( url )
+        except Exception, e :
+            title = "%s - %s" % ( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(257).upper() )
+            xbmcgui.Dialog().ok( title, url, str(e) )
+            return
         
         # Debug
         if (self.DEBUG) :
@@ -200,7 +206,7 @@ class Main:
         xbmcplugin.addSortMethod( int( sys.argv[ 1 ]), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
 
         # End of directory...
-        xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )        
+        xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
 
     #
     # Convert HTML to readable strings...
