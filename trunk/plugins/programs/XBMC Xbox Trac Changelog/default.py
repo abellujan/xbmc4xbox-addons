@@ -3,7 +3,7 @@
 # XBMC for Xbox Trac Changelog - Program plugin for XBMC
 # http://sourceforge.net/apps/trac/xbmc4xbox/log/trunk
 #
-# Version 1.5
+# Version 1.6
 # 
 # Author:
 #
@@ -21,8 +21,8 @@
 __plugin__  = "XBMC Xbox Trac Changelog"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "30 May 2010"
-__version__ = "1.5"
+__date__    = "06 November 2010"
+__version__ = "1.6"
 
 
 #

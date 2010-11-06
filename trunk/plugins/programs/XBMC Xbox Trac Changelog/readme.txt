@@ -1,6 +1,9 @@
 XBMC Xbox Trac Changelog
 http://sourceforge.net/apps/trac/xbmc4xbox/log/trunk
 
+v1.6 (06 November 2010):
+ * Confluence skin (details);
+
 v1.5 (30 May 2010) :
  * Project moved to SourceForget.net;
  * Use HTTP compression;
