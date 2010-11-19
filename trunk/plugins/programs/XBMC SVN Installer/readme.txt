@@ -2,7 +2,8 @@ XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
 v1.7 beta 2 (Saturday, 6 Novem 2010):
- - additional locations for shortcut .cfg - E:\Dash, E:\Dashboard (thanks to Heimdall);
+ - more shortcut .cfg locations - E:\Dash, E:\Dashboard (thanks to Heimdall);
+ - more shortcut .cfg locations - C:\fonts\dashboard (thanks to danofun); 
  - better handling of HTTP server errors;
 
 v1.6 (Sunday, 24 October 2010):
