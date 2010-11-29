@@ -49,8 +49,16 @@ Before setting the new build as a default dashboard, you should test areas that 
 
 Go to Programs > XBMC SVN Installer > Builds > Set running XBMC as default dashboard. This step will look for dashboard configuration files as follows:
 
-  * shortcut .cfg files in C:\, E:\, E:\Dash, E:\Dashboard or F:\
-  * x2config.ini in E:\ or F:\
+  * shortcut .cfg in (this order):
+    * C:\fonts\dashboard
+    * C:\
+    * E:\
+    * E:\Dash
+    * E:\Dashboard
+    * F:\
+  * x2config.ini in:
+    * E:\
+    * F:\
 
 [http://xbmc4xbox-addons.googlecode.com/svn/wiki/images/XBMC%20SVN%20Installer/Builds%20-%20Step%202a.png]
 
