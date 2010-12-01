@@ -3,7 +3,7 @@
 # XBMC SVN Installer - Program plugin for XBMC
 # http://www.xbmcsvn.com/
 #
-# Version 1.7 beta 3
+# Version 1.7
 # 
 # Author(s):
 #
@@ -24,8 +24,8 @@
 __plugin__  = "XBMC SVN Installer"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "19 November 2010"
-__version__ = "1.7 beta 3"
+__date__    = "1 December 2010"
+__version__ = "1.7"
 
 #
 # Imports
