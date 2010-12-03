@@ -1,6 +1,9 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
+v1.8 beta (Friday, 3 December 2010)
+ - "news" section is back;
+
 v1.7 (Wednesday, 1 December 2010):
  - more shortcut .cfg locations - E:\Dash, E:\Dashboard (thanks to Heimdall);
  - more shortcut .cfg locations - C:\fonts\dashboard (thanks to danofun); 

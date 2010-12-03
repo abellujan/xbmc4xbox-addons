@@ -1,13 +1,12 @@
 #
 # Imports
 #
+import re
 import sys
 import xbmc
 import xbmcgui
 import xbmcplugin
 import traceback
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
 from xbmcsvn_utils import HTTPCommunicator
 from xbmcsvn_utils import HTMLStripper
 
@@ -43,28 +42,14 @@ class GUI( xbmcgui.WindowXMLDialog ):
             # Get the news...
             #
             httpCommunicator = HTTPCommunicator()
-            htmlData         = httpCommunicator.get( "http://www.sshcs.com/xbmc/")
+            htmlData         = httpCommunicator.get( "http://www.xbmcsvn.com/")
     
             #
-            # Parse the HTML...
+            # Look for DIV ID="dd3"...
             #
-            output_text      = "\n"
-            soupStrainer     = SoupStrainer( "div", { "class" : "welcomenews" } )
-            beautifulSoup    = BeautifulSoup( htmlData, parseOnlyThese=soupStrainer)
-
-            div_welcomenews      = beautifulSoup.find( "div", { "class" : "welcomenews" });
-            div_welcomenews_divs = div_welcomenews.findAll( "div" );
-            
-            # Title
-            divs              = div_welcomenews_divs[ 1 ].findAll( "div")
-            build             = divs [ 1 ].string.strip()
-            uploaded          = divs [ 2 ].string.replace("Uploaded", "").strip()
-            output_text       = output_text + "%s   [%s]\n\n" % ( build, uploaded )
-            
-            # Text
-            htmlStripper      = HTMLStripper()
-            htmlStripper.feed( str( div_welcomenews_divs[0] ).replace( "<br />", "\n" ).replace("<p>", "\n<p>") )
-            output_text       = output_text + htmlStripper.get_fed_data()
+            regex       = re.compile("<div id=\"dd3\" .*?>(.*?)</div>")
+            r           = regex.search(htmlData)
+            output_text = r.groups()[0]
             
         #
         # Aw :(
