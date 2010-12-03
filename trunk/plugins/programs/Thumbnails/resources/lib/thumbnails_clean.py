@@ -59,7 +59,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
             dialogProgress.update( 1, xbmc.getLocalizedString(30200), "Thumbnails")
             topThumbPath                         = THUMBNAILS_PATH
             before_file_count, before_total_size = self.scanPath( topThumbPath )
-            self.cleanThumbnailsFromPath( topThumbPath )
+            self.cleanThumbnails( topThumbPath )
             after_file_count, after_total_size   = self.scanPath( topThumbPath )
 
             output_text = output_text + "Thumbnails"    + os.linesep
@@ -89,7 +89,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
             dialogProgress.update( 40, xbmc.getLocalizedString(30200), "Thumbnails\Pictures")
             picturesThumbPath                    = os.path.join( THUMBNAILS_PATH, "Pictures" )
             before_file_count, before_total_size = self.scanPath( picturesThumbPath )
-            self.cleanThumbnailsFromPath( picturesThumbPath )
+            self.cleanThumbnails( picturesThumbPath )
             after_file_count, after_total_size   = self.scanPath( picturesThumbPath )
             
             output_text = output_text + "Thumbnails\Pictures" + os.linesep
@@ -105,7 +105,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
             dialogProgress.update( 60, xbmc.getLocalizedString(30200), "Thumbnails\Programs")
             programsThumbPath                    = os.path.join( THUMBNAILS_PATH, "Programs" )
             before_file_count, before_total_size = self.scanPath( programsThumbPath )
-            self.cleanThumbnailsFromPath( programsThumbPath )
+            self.cleanThumbnails( programsThumbPath )
             after_file_count,  after_total_size  = self.scanPath( programsThumbPath )
             
             output_text = output_text + "Thumbnails\Programs" + os.linesep
@@ -144,7 +144,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
             exception_tbns.extend( actor_tbns )
             
             # Clean video thumbnails...
-            self.cleanThumbnailsFromPath( videoThumbPath, exception_tbns )
+            self.cleanThumbnails( videoThumbPath, exception_tbns )
             after_file_count, after_total_size   = self.scanPath( videoThumbPath )
             
             output_text = output_text + "Thumbnails\Video" + os.linesep
@@ -208,7 +208,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
     #
     # Clean thumbnails from path...
     #
-    def cleanThumbnailsFromPath(self, path, exceptions = [] ):
+    def cleanThumbnails(self, path, exceptions = [] ):
         # Init
         files_count = 0
         files_size  = 0        
@@ -237,7 +237,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
                     for tbn_file in tbn_files :
                         if tbn_file.endswith( ".tbn" ) and \
                            not tbn_file in exceptions :
-                            tbn_full_path = os.path.join( path, tbn_file )
+                            tbn_full_path = os.path.join( thumb_dir, tbn_file )
                             statinfo      = os.stat( tbn_full_path )
                             
                             files_count = files_count + 1
