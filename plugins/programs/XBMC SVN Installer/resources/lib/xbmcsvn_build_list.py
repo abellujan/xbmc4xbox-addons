@@ -46,15 +46,20 @@ class Main:
         html2text     = HTML2Text()
         os_platform   = os.environ.get("OS")
 
-        if os_platform == "xbox" :
-            rss_url = "http://www.sshcs.com/xbmc?mode=RSS&a=XBOX"            
+        # Xbox only (anyways)
+        rss_url = "http://www.xbmcsvn.com/?mode=RSS&a=XBOX"            
         
         #
         # Get RSS feed...
         #
-        httpCommunicator = HTTPCommunicator()
-        xmlText          = httpCommunicator.get( rss_url )
-        xmlDom           = minidom.parseString( xmlText )        
+        try :
+            httpCommunicator = HTTPCommunicator()
+            xmlText          = httpCommunicator.get( rss_url )
+            xmlDom           = minidom.parseString( xmlText )
+        except Exception, e :
+            title = "%s - %s" % ( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(257).upper() )
+            xbmcgui.Dialog().ok( title, rss_url, str(e) )
+            return
         
         #
         # Parse XML...
