@@ -21,6 +21,7 @@
 		<copy todir="${basedir}/tmp/${ant.project.name}">
 			<fileset dir="${basedir}/../../">
 				<exclude name=".svn"/>
+				<exclude name=".settings/**"/>
 				<exclude name="**/*.pyo"/>
 				<exclude name="resources/dev/**"/>
 				<exclude name=".project"/>
