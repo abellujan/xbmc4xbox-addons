@@ -129,7 +129,12 @@ class Main:
         delete_build_url = "%s?action=build-delete" % sys.argv[0]
         listitem         = xbmcgui.ListItem( label=xbmc.getLocalizedString(30401), iconImage="DefaultProgram.png" )
         xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = delete_build_url, listitem = listitem, isFolder=False)
-         
+        
+        #
+        # Show current XBMC version (notification)
+        #
+        xbmc.executebuiltin( "XBMC.Notification(XBMC4Xbox,%s (%s),10000)" % ( xbmcsvn_utils.XBMC_BUILD_VERSION, xbmcsvn_utils.XBMC_BUILD_DATE ) )
+        
         #   
         # Label (top-right)...
         #
