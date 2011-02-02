@@ -32,6 +32,7 @@ class Main:
 		self.GAMETRAILERS_TV_PLAYER_RE = re.compile( ".*/gametrailerstv_player.php?.*" )
 		self.EPISODE_GAMETRAILER_TV_RE = re.compile( ".*/episode/gametrailers-tv/.*" )
 		self.USER_MOVIES_URL_RE        = re.compile( ".*/usermovies/(\d+).html" )
+		self.MOSES_MOVIES_THUMBS       = re.compile(".*/moses/moviesthumbs/(\d+)-.*")
 		
 		#
 		# Parse parameters...
@@ -247,8 +248,23 @@ class Main:
 			f.close()
 			
 		# Parse HTML response...
-		params     = dict(part.split('=') for part in htmlData.split('&'))
+		params     = dict(part.split('=', 1) for part in htmlData.split('&'))
 		umfilename = urllib.unquote( params[ "umfilename" ] )
+		hasHD      = urllib.unquote( params.get("hasHD") )
+		
+		# SD preferred, but the URL is for HD...
+		if self.video_quality == "0" and hasHD == "0":
+			umthumbnail = urllib.unquote( params.get("umthumbnail") )
+			movie_id_sd = self.MOSES_MOVIES_THUMBS.search( umthumbnail ).group(1)
+			
+			# Get data...
+			usock    = urllib.urlopen( "http://mosii.gametrailers.com/getmediainfo4.php?hd=1&mid=%s" % movie_id_sd )
+			htmlData = usock.read()
+			usock.close()
+			
+			# Parse response...
+			params     = dict(part.split('=', 1) for part in htmlData.split('&'))
+			umfilename = urllib.unquote( params[ "umfilename" ] )
 		
 		# Video URL...
 		if (self.video_format == "0") :
