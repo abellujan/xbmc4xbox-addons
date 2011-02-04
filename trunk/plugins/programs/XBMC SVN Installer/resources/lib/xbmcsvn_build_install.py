@@ -286,7 +286,7 @@ class Main:
             #
             # Clean new UserData...
             #
-            dialogProgress.update(0, xbmc.getLocalizedString(30410), new_userdata_path )
+            dialogProgress.update(0, xbmc.getLocalizedString(30410), old_userdata_path, new_userdata_path )
             shutil.rmtree( new_userdata_path, ignore_errors=True )
             
             #
