@@ -16,6 +16,7 @@
   <!--
    * Clean
    -->
-  <string id="30200">Cleaning:</string>
+  <string id="30201">Scanning:</string>
+  <string id="30202">Cleaning:</string>
 
 </strings>

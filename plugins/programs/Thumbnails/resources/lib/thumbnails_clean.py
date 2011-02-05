@@ -8,9 +8,9 @@ import time
 import xbmc
 import xbmcgui
 import xbmcplugin
-
 import traceback
 from BeautifulSoup import BeautifulSoup
+from sets          import Set
 
 from urllib import quote_plus, unquote_plus
 from os import linesep
@@ -54,103 +54,98 @@ class GUI( xbmcgui.WindowXMLDialog ):
             dialogProgress.create( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30200) )
 
             #
-            # (1) Thumbnails (top)...
+            # (1) Music thumbs (no cleanup)...
             #
-            dialogProgress.update( 1, xbmc.getLocalizedString(30200), "Thumbnails")
-            topThumbPath                         = THUMBNAILS_PATH
-            before_file_count, before_total_size = self.scanPath( topThumbPath )
-            self.cleanThumbnails( topThumbPath )
-            after_file_count, after_total_size   = self.scanPath( topThumbPath )
-
-            output_text = output_text + "Thumbnails"    + os.linesep
-            output_text = output_text + "~~~~~~~~~~~~~" + os.linesep
-            output_text = output_text + "Before = %u file(s), %s"   % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + "After    = %u file(s), %s" % ( after_file_count , self.formatSize( after_total_size  ) ) + os.linesep
-            output_text = output_text + os.linesep
-            textboxControl.setText( output_text )
+            musicThumbPath = os.path.join( THUMBNAILS_PATH, "Music" )
             
-            #
-            # (2) Music thumbs (no cleanup)...
-            #
-            dialogProgress.update( 20, xbmc.getLocalizedString(30200), "Thumbnails\Music")
-            musicThumbPath                       = os.path.join( THUMBNAILS_PATH, "Music" )
+            dialogProgress.update( 10, xbmc.getLocalizedString(30201), "Thumbnails\Music")            
             before_file_count, before_total_size = self.scanPath( musicThumbPath )
             
-            output_text = output_text + "Thumbnails\Music" + os.linesep
-            output_text = output_text + "~~~~~~~~~~~~~"    + os.linesep
-            output_text = output_text + "Before = %u file(s), %s"   % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + "After    = %u file(s), %s" % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + os.linesep
+            # Print results...
+            output_text = self.getResults( "Thumbnails\Music", before_file_count, before_total_size, before_file_count, before_total_size )
             textboxControl.setText( output_text )
             
             #
             # (3) Picture thumbs...
             #
-            dialogProgress.update( 40, xbmc.getLocalizedString(30200), "Thumbnails\Pictures")
-            picturesThumbPath                    = os.path.join( THUMBNAILS_PATH, "Pictures" )
+            picturesThumbPath = os.path.join( THUMBNAILS_PATH, "Pictures" )
+                        
+            # Scan thumbnails folder (before)...
+            dialogProgress.update( 20, xbmc.getLocalizedString(30201), "Thumbnails\Pictures")
             before_file_count, before_total_size = self.scanPath( picturesThumbPath )
+            
+            # Clean thumbnails...
+            dialogProgress.update( 25, xbmc.getLocalizedString(30202), "Thumbnails\Pictures")
             self.cleanThumbnails( picturesThumbPath )
+            
+            # Scan thumbnails folder (after)...
+            dialogProgress.update( 30, xbmc.getLocalizedString(30201), "Thumbnails\Pictures")
             after_file_count, after_total_size   = self.scanPath( picturesThumbPath )
             
-            output_text = output_text + "Thumbnails\Pictures" + os.linesep
-            output_text = output_text + "~~~~~~~~~~~~~"       + os.linesep
-            output_text = output_text + "Before = %u file(s), %s"   % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + "After    = %u file(s), %s" % ( after_file_count , self.formatSize( after_total_size  ) ) + os.linesep
-            output_text = output_text + os.linesep
+            # Print results...
+            output_text = output_text + self.getResults( "Thumbnails\Pictures", before_file_count, before_total_size, after_file_count, after_total_size )
             textboxControl.setText( output_text )
             
             #
             # (4) Program thumbnails...
             #
-            dialogProgress.update( 60, xbmc.getLocalizedString(30200), "Thumbnails\Programs")
-            programsThumbPath                    = os.path.join( THUMBNAILS_PATH, "Programs" )
+            programsThumbPath = os.path.join( THUMBNAILS_PATH, "Programs" )
+
+            # Scan thumbnails folder (before)...
+            dialogProgress.update( 40, xbmc.getLocalizedString(30201), "Thumbnails\Programs")
             before_file_count, before_total_size = self.scanPath( programsThumbPath )
+            
+            # Clean thumbnails...
+            dialogProgress.update( 45, xbmc.getLocalizedString(30202), "Thumbnails\Programs")
             self.cleanThumbnails( programsThumbPath )
+            
+            # Scan thumbnails folder (after)...
+            dialogProgress.update( 50, xbmc.getLocalizedString(30201), "Thumbnails\Programs")
             after_file_count,  after_total_size  = self.scanPath( programsThumbPath )
             
-            output_text = output_text + "Thumbnails\Programs" + os.linesep
-            output_text = output_text + "~~~~~~~~~~~~~"       + os.linesep
-            output_text = output_text + "Before = %u file(s), %s"   % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + "After    = %u file(s), %s" % ( after_file_count , self.formatSize( after_total_size  ) ) + os.linesep
-            output_text = output_text + os.linesep
+            # Print results...
+            output_text = output_text + self.getResults( "Thumbnails\Programs", before_file_count, before_total_size, after_file_count, after_total_size )
             textboxControl.setText( output_text )
             
             #
             # (5) Video thumbs...
             #
-            dialogProgress.update( 80, xbmc.getLocalizedString(30200), "Thumbnails\Video")
-            videoThumbPath                       = os.path.join( THUMBNAILS_PATH, "Video" )
+            videoThumbPath = os.path.join( THUMBNAILS_PATH, "Video" )
+            
+            # Scan thumbnails (before)...
+            dialogProgress.update( 60, xbmc.getLocalizedString(30201), "Thumbnails\Video")
             before_file_count, before_total_size = self.scanPath( videoThumbPath )
             
-            #
-            # Scan library...
-            #
-            exception_tbns = []
+            # Scan library (tbns not to clean)...
+            except_tbns = Set()
             
             # Library - Movies...
-            movie_tbns = self.scanMovieLibrary()
-            exception_tbns.extend( movie_tbns )
+            dialogProgress.update( 65, xbmc.getLocalizedString(30201), "Library\Video\Movies")
+            self.scanMovieLibrary( except_tbns )
             
             # Library - TV Shows...
-            tvshow_tbns = self.scanTvShowLibrary()
-            exception_tbns.extend( tvshow_tbns )
+            dialogProgress.update( 70, xbmc.getLocalizedString(30201), "Library\Video\TV Shows")
+            self.scanTvShowLibrary( except_tbns )
             
             # Library - Episodes...
-            episode_tbns = self.scanEpisodeLibrary()
-            exception_tbns.extend( episode_tbns )
+            dialogProgress.update( 75, xbmc.getLocalizedString(30201), "Library\Video\Episodes")
+            self.scanEpisodeLibrary( except_tbns )
             
             # Library - Actors...
-            actor_tbns = self.scanActorsLibrary();
-            exception_tbns.extend( actor_tbns )
+            dialogProgress.update( 80, xbmc.getLocalizedString(30201), "Library\Video\Actors")
+            self.scanActorsLibrary( except_tbns );
             
             # Clean video thumbnails...
-            self.cleanThumbnails( videoThumbPath, exception_tbns )
-            after_file_count, after_total_size   = self.scanPath( videoThumbPath )
+            dialogProgress.update( 85, xbmc.getLocalizedString(30202), "Thumbnails\Video")
+            self.cleanThumbnails( videoThumbPath, except_tbns )
+            print except_tbns
             
-            output_text = output_text + "Thumbnails\Video" + os.linesep
-            output_text = output_text + "~~~~~~~~~~~~~"    + os.linesep
-            output_text = output_text + "Before = %u file(s), %s"   % ( before_file_count, self.formatSize( before_total_size ) ) + os.linesep
-            output_text = output_text + "After    = %u file(s), %s" % ( after_file_count , self.formatSize( after_total_size  ) ) + os.linesep            
+            # Scan thumbnails folder (after)...
+            dialogProgress.update( 90, xbmc.getLocalizedString(30201), "Thumbnails\Video")
+            after_file_count, after_total_size = self.scanPath( videoThumbPath )
+            
+            # Print results...
+            output_text = output_text + self.getResults( "Thumbnails\Video", before_file_count, before_total_size, after_file_count, after_total_size )
             textboxControl.setText( output_text )
             
             #
@@ -175,6 +170,19 @@ class GUI( xbmcgui.WindowXMLDialog ):
         # The end
         #
 
+    #
+    #
+    #
+    def getResults( self, header, files_count_before, files_size_before, files_count_after, files_size_after ):
+        text = ""
+        text = text + header          + os.linesep
+        text = text + "~~~~~~~~~~~~~" + os.linesep
+        text = text + "Before = %u file(s), %s"   % ( files_count_before, self.formatSize( files_size_before ) ) + os.linesep
+        text = text + "After    = %u file(s), %s" % ( files_count_after,  self.formatSize( files_size_after  ) ) + os.linesep
+        text = text + os.linesep
+        
+        # return value
+        return text
     
     #
     # Scan path for thumbnails...
@@ -184,160 +192,142 @@ class GUI( xbmcgui.WindowXMLDialog ):
         files_count = 0
         files_size  = 0        
         
-        # Scan folder (no sub-folders)... 
-        if not os.path.isdir( os.path.join( path, "0" ) ) :
-            tbn_files = glob.glob( os.path.join( path, "*.tbn" ) )
-            for tbn_file in  tbn_files :
-                statinfo    = os.stat( tbn_file )
-                files_count = files_count + 1
-                files_size  = files_size  + statinfo.st_size            
         # Scan sub-folders...
-        else :
-            for hexdigit in '01234567890ABCDEF' :
-                thumb_dir = os.path.join( path, hexdigit )
-                if os.path.isdir( thumb_dir ) :
-                    tbn_files = glob.glob( os.path.join( thumb_dir, "*.tbn" ) )
-                    for tbn_file in  tbn_files :
-                        statinfo    = os.stat( tbn_file )
-                        files_count = files_count + 1
-                        files_size  = files_size  + statinfo.st_size
-                    
+        for subdir in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "fanart" ] :
+            thumb_dir = os.path.join( path, subdir )
+            if os.path.isdir( thumb_dir ) :
+                tbn_files = glob.glob( os.path.join( thumb_dir, "*.tbn" ) )
+                for tbn_file in  tbn_files :
+                    statinfo    = os.stat( tbn_file )
+                    files_count = files_count + 1
+                    files_size  = files_size  + statinfo.st_size
+                    statinfo    = None
+                
         # Return value
         return files_count, files_size
         
     #
     # Clean thumbnails from path...
     #
-    def cleanThumbnails(self, path, exceptions = [] ):
+    def cleanThumbnails(self, path, exceptions = () ):
         # Init
         files_count = 0
         files_size  = 0        
         
         # Scan folder (no sub-folders)...
-        if not os.path.isdir( os.path.join( path, "0" ) ) :
-            tbn_files = os.listdir( path )
-            for tbn_file in tbn_files :
-                if tbn_file.endswith( ".tbn" ) and \
-                   not tbn_file in exceptions :
-                    tbn_full_path = os.path.join( path, tbn_file )
-                    statinfo      = os.stat( tbn_full_path )
-                    
-                    files_count   = files_count + 1
-                    files_size    = files_size  + statinfo.st_size
-                    
-                    # Remove thumbnail...
-                    os.remove( tbn_full_path )
-                    
-        # Scan sub-folders...
-        else :            
-            for hexdigit in '01234567890ABCDEF' :
-                thumb_dir = os.path.join( path, hexdigit )
-                if os.path.isdir( thumb_dir ) :
-                    tbn_files = os.listdir( thumb_dir )
-                    for tbn_file in tbn_files :
-                        if tbn_file.endswith( ".tbn" ) and \
-                           not tbn_file in exceptions :
-                            tbn_full_path = os.path.join( thumb_dir, tbn_file )
-                            statinfo      = os.stat( tbn_full_path )
-                            
-                            files_count = files_count + 1
-                            files_size  = files_size  + statinfo.st_size
-                            
-                            # Remove thumbnail...
-                            os.remove( tbn_full_path )                    
+        for subdir in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "fanart" ] :
+            thumb_dir = os.path.join( path, subdir )
+            if os.path.isdir( thumb_dir ) :
+                tbn_files = os.listdir( thumb_dir )
+                for tbn_file in tbn_files :
+                    if tbn_file.endswith( ".tbn" ) and \
+                       not tbn_file in exceptions :
+                        tbn_full_path = os.path.join( thumb_dir, tbn_file )
+                        statinfo      = os.stat( tbn_full_path )
+                        
+                        files_count = files_count + 1
+                        files_size  = files_size  + statinfo.st_size
+                        
+                        # Remove thumbnail...
+                        os.remove( tbn_full_path )
 
     #
+    # Scan library for Movie thumbnails...
     #
-    #
-    def scanMovieLibrary(self):
-        # Init...
-        tbn_list = []
-        
+    def scanMovieLibrary( self, tbns_set ):
         # Get movie list...
-        sql_movies = "select strPath, strFilename from movieview"
-        movies_xml = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_movies ), )
+        sql_movies       = "select strPath, strFilename from movieview"
+        xml_movies       = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_movies ), )
         
-        beautifulSoup    = BeautifulSoup( movies_xml )
+        beautifulSoup    = BeautifulSoup( xml_movies )
         fieldNodes       = beautifulSoup.findAll( "field" )
         fieldNodesTuples = zip( fieldNodes[::2], fieldNodes[1::2])
-        for fieldNodePath, fieldNodeFile in  fieldNodesTuples:
-            movie_path       = fieldNodePath.contents[0]
-            movie_file       = fieldNodeFile.contents[0]
-            movie_file_path  = os.path.join( movie_path, movie_file )
-            
-            tbn_movie_path       = xbmc.getCacheThumbName( movie_path )
-            tbn_movie_file_path  = xbmc.getCacheThumbName( movie_file_path )
-            
-            tbn_list.append( tbn_movie_path )
-            tbn_list.append( tbn_movie_file_path )            
-            
-        # Return TBN file list...
-        return tbn_list
-    
-    #
-    #
-    #
-    def scanActorsLibrary(self):         
-        # Init...
-        tbn_list = []
         
-        # Get episode list...        
-        sql_actors = "select strActor from actors"
-        movies_xml = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_actors ), )
+        for fieldNodePath, fieldNodeFile in fieldNodesTuples:
+            movie_path          = fieldNodePath.contents[0]
+            movie_file          = fieldNodeFile.contents[0]
+            movie_file_path     = os.path.join( movie_path, movie_file )
+            
+            tbn_movie_path      = xbmc.getCacheThumbName( movie_path )
+            tbn_movie_file_path = xbmc.getCacheThumbName( movie_file_path )
+            
+            tbns_set.add( tbn_movie_path )
+            tbns_set.add( tbn_movie_file_path )
+            
+        # Cleanup
+        sql_movies       = None
+        xml_movies       = None
+        fieldNodesTuples = None
+        beautifulSoup    = None        
+
+    #
+    # Scan library for Actor thumbnails...
+    #
+    def scanActorsLibrary( self, tbns_set ):         
+        # Get actor list...        
+        sql_actors    = "select strActor from actors"
+        xml_actors    = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_actors ), )
         
-        beautifulSoup = BeautifulSoup( movies_xml )
+        beautifulSoup = BeautifulSoup( xml_actors )
         fieldNodes    = beautifulSoup.findAll( "field" )
-        for fieldNode in  fieldNodes:
+        
+        for fieldNode in fieldNodes:
             actor_name     = "actor" + str(fieldNode.contents[0]).lower()
             actor_name_tbn = xbmc.getCacheThumbName( actor_name )
         
-            tbn_list.append( actor_name_tbn )
+            tbns_set.add( actor_name_tbn )
             
-        # Return TBN file list...
-        return tbn_list           
+        # Cleanup
+        sql_actors    = None
+        xml_actors    = None
+        fieldNodes    = None
+        beautifulSoup = None          
     
     #
+    # Scan library for TVShow thumbnails...
     #
-    #
-    def scanTvShowLibrary(self):
-        # Init...
-        tbn_list = []
+    def scanTvShowLibrary( self, tbns_set ):
+        # Get tv show list...        
+        sql_tvshows   = "select strPath from tvshowview"
+        xml_tvshows   = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_tvshows ), )
         
-        # Get episode list...        
-        sql_episodes = "select strPath from tvshowview"
-        movies_xml = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_episodes ), )
-        
-        beautifulSoup = BeautifulSoup( movies_xml )
+        beautifulSoup = BeautifulSoup( xml_tvshows )
         fieldNodes    = beautifulSoup.findAll( "field" )
-        for fieldNode in  fieldNodes:
+        
+        for fieldNode in fieldNodes:
             tvshow_path     = fieldNode.contents[0]
             tbn_tvshow_path = xbmc.getCacheThumbName( tvshow_path )
             
-            tbn_list.append( tbn_tvshow_path )
+            tbns_set.add( tbn_tvshow_path )
             
-        # Return TBN file list...
-        return tbn_list      
+        # Cleanup
+        sql_tvshows   = None
+        xml_tvshows   = None
+        fieldNodes    = None
+        beautifulSoup = None       
 
     #
+    # Scan library for episode thumbnails...
     #
-    #
-    def scanEpisodeLibrary(self):
-        # Init...
-        tbn_list = []
-        
+    def scanEpisodeLibrary( self, tbns_set ):
         # Get episode list...        
-        sql_episodes = "select strPath || strFilename from episodeview"
-        movies_xml = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_episodes ), )
+        sql_episodes  = "select strPath || strFilename from episodeview"
+        xml_episodes  = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_episodes ), )
         
-        beautifulSoup = BeautifulSoup( movies_xml )
+        beautifulSoup = BeautifulSoup( xml_episodes )
         fieldNodes    = beautifulSoup.findAll( "field" )
-        for fieldNode in  fieldNodes:
+        
+        for fieldNode in fieldNodes:
             episode_full_path = fieldNode.contents[0]
             episode_thumbnail = xbmc.getCacheThumbName( episode_full_path )
-            tbn_list.append( episode_thumbnail )
             
-        # Return TBN file list...
-        return tbn_list
+            tbns_set.add( episode_thumbnail )
+            
+        # Cleanup
+        sql_episodes  = None
+        xml_episodes  = None
+        fieldNodes    = None
+        beautifulSoup = None
                 
     #
     # Format file size
