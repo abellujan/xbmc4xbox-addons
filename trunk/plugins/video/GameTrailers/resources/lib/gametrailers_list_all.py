@@ -97,8 +97,13 @@ class Main:
 					overlay       = xbmcgui.ICON_OVERLAY_NONE
 			else:
 				div_newestlist_movie_sd = div_newlist_thumb.find( "div", { "class" : "newestlist_movie_format_SD" } )
-				video_page_url = div_newestlist_movie_sd.a[ "href" ]
-				overlay        = xbmcgui.ICON_OVERLAY_NONE
+				if (div_newestlist_movie_sd) :
+					video_page_url      = div_newestlist_movie_sd.a[ "href" ]
+					overlay             = xbmcgui.ICON_OVERLAY_NONE				# SD
+				else :
+					div_newestlist_movie_hd = div_newlist_thumb.find( "div", { "class" : "newestlist_movie_format_HD" } )
+					video_page_url          = div_newestlist_movie_hd.a[ "href" ]
+					overlay                 = xbmcgui.ICON_OVERLAY_HD				# HD
 			
 			div_newestlist_info = table.find( "div", { "class" : "newestlist_info" } )
 			
