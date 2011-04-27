@@ -14,7 +14,6 @@
 #
 #  * Team XBMC4Xbox                                  [ http://xbmc4xbox.org ]
 #  * The Questor        <thequestor@gmail.com>       [ http://wwww.xbmcsvn.com/ ]
-#  * Leonard Richardson <leonardr@segfault.org>      [ http://www.crummy.com/software/BeautifulSoup/ ]
 #  * Nuka1195 / BigBellyBilly (T3CH Upgrader Script)
 #
 
