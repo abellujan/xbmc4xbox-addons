@@ -1,7 +1,7 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
-v1.8 beta 3 (Sunday, 30 January 2011)
+v1.8 (Wednesday, 27 April 2011)
  - "news" section is back;
  - handle Xbox RSS server errors (builds);
  - show current build version + date (notification);
