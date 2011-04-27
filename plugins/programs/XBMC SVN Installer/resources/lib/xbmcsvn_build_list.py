@@ -150,7 +150,7 @@ class Main:
     # Convert HTML to readable strings...
     #
     def parseDescription ( self, description ):
-        xmlString = description[description.find("<log>") : description.rfind("</log>") + 6 ]
+        xmlString = description[description.find("<log>") : description.find("</log>") + 6 ]
         xmlDom    = minidom.parseString( xmlString )
         
         text = ""
