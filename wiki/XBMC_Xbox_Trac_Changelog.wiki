@@ -1,5 +1,5 @@
-#summary XBMC Xbox Trac Changelog - XBMC program plugin
-#labels Featured,Phase-Support,Program,Plugin
+#summary XBMC Xbox Trac Changelog - program plugin
+#labels Featured,Phase-Support
 
 <a href="http://sourceforge.net/apps/trac/xbmc4xbox/log/trunk?limit=100&verbose=on&format=rss">http://sourceforge.net/apps/trac/xbmc4xbox/log/trunk?limit=100&verbose=on&format=rss</a>
 <br/>
