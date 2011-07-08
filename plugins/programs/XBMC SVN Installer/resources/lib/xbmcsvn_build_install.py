@@ -267,17 +267,36 @@ class Main:
             return
         
         #
-        # Transferring your data? (upgrade)...
+        # Transferring data? (upgrade)...
         #
         answer_upgrade = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30408), "", xbmc.getLocalizedString(30409) )
         if answer_upgrade :
             # Progress dialog...
             dialogProgress = xbmcgui.DialogProgress()
-            dialogProgress.create( xbmc.getLocalizedString(30000) )            
+            dialogProgress.create( xbmc.getLocalizedString(30000) )
+            
+            ##########################
+            #
+            # (1) Transfer System files...
+            #
+            ##########################
+            old_system_path = os.path.join( xbmc.translatePath( "special://home" ), "system" )
+            new_system_path = os.path.join( install_build_path,                     "system" )
+            
+            for file in [ "profiles.xml", "FileZilla Server.xml" ] :
+                src_file_path = os.path.join( old_system_path, file )
+                dst_file_path = os.path.join( new_system_path, file )
+                
+                # Progress bar...
+                dialogProgress.update(0, xbmc.getLocalizedString(30410), src_file_path, dst_file_path )
+                
+                if os.path.isfile( src_file_path ) :
+                    shutil.copyfile( src_file_path, dst_file_path)
+            
 
             ##########################
             #
-            # (1) Transfer UserData... 
+            # (2) Transfer UserData... 
             #
             ##########################
             old_userdata_path = xbmc.translatePath( "special://masterprofile" )
@@ -286,7 +305,7 @@ class Main:
             #
             # Clean new UserData...
             #
-            dialogProgress.update(0, xbmc.getLocalizedString(30410), old_userdata_path, new_userdata_path )
+            dialogProgress.update(20, xbmc.getLocalizedString(30411), old_userdata_path, new_userdata_path )
             shutil.rmtree( new_userdata_path, ignore_errors=True )
             
             #
@@ -296,7 +315,7 @@ class Main:
             
             #######################
             #
-            # (2) Transfer skins...
+            # (3) Transfer skins...
             #
             #######################
             old_skins_path = os.path.join( xbmc.translatePath( "special://home" ), "skin" )
@@ -316,7 +335,7 @@ class Main:
                 new_skin = os.path.join( new_skins_path, skin_entry )
                 
                 # Progress bar...
-                dialogProgress.update(25, xbmc.getLocalizedString(30411), old_skin, new_skin )
+                dialogProgress.update(40, xbmc.getLocalizedString(30412), old_skin, new_skin )
 
                 # (dir) If the new skin folder exists, skip (maintained in SVN)...
                 if os.path.isdir( old_skin ) :
@@ -328,7 +347,7 @@ class Main:
 
             #########################
             #
-            # (3) Transfer scripts...
+            # (4) Transfer scripts...
             #
             #########################
             old_scripts_path = os.path.join( xbmc.translatePath( "special://home" ), "scripts" )
@@ -348,7 +367,7 @@ class Main:
                 new_script = os.path.join( new_scripts_path, script_entry )
                 
                 # Progress bar...
-                dialogProgress.update(50, xbmc.getLocalizedString(30412), old_script, new_script )
+                dialogProgress.update(60, xbmc.getLocalizedString(30413), old_script, new_script )
 
                 # (dir) If the new script folder exists, skip (maintained in SVN)...
                 if os.path.isdir( old_script ) :
@@ -360,7 +379,7 @@ class Main:
 
             #########################
             #
-            # (4) Transfer plugins...
+            # (5) Transfer plugins...
             #
             #########################
             old_plugins_path = os.path.join( xbmc.translatePath( "special://home" ), "plugins" )
@@ -396,7 +415,7 @@ class Main:
                     new_plugin = os.path.join( new_plugin_category_dir, plugin_entry )
                 
                     # Progress bar...
-                    dialogProgress.update(75, xbmc.getLocalizedString(30413), old_plugin, new_plugin )
+                    dialogProgress.update(80, xbmc.getLocalizedString(30414), old_plugin, new_plugin )
                     
                     # If the new plugin folder exists, skip (maintained in SVN)...
                     if not os.path.exists( new_plugin ) :
@@ -411,7 +430,7 @@ class Main:
         #
         # Installation complete
         #
-        answer_run = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30414), install_build_path )
+        answer_run = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30415), install_build_path )
         if answer_run :
             xbmc.executebuiltin('XBMC.RunXBE(%s)' % os.path.join( install_build_path, "default.xbe" ) )
 

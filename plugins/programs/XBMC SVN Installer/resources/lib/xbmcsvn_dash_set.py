@@ -35,7 +35,7 @@ class Main:
         #
         # Find and update .cfg file...
         #
-        shortcut_cfg_path = self.fingShortcutCfg()
+        shortcut_cfg_path = self.findShortcutCfg()
         if shortcut_cfg_path :
             self.updateShortcutCfg( shortcut_cfg_path, xbmc_home )
             return
@@ -43,7 +43,7 @@ class Main:
         #
         # Sorry, could not find any of the above...
         #
-        xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30416) )
+        xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30417) )
             
     #
     # Check if the path to current XBMC...
@@ -94,7 +94,7 @@ class Main:
         #
         dash1Name = "dash1Name = %s" % ( xbmc_home[ 0:2 ] + xbmc_home[ 3: ] )
         answer    = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), 
-                                            xbmc.getLocalizedString(30415) % x2config_path,
+                                            xbmc.getLocalizedString(30416) % x2config_path,
                                             "", dash1Name )
         # Cancel and return...
         if not answer :
@@ -127,16 +127,26 @@ class Main:
     #
     # Find shortcut .cfg
     #
-    def fingShortcutCfg( self ):
+    def findShortcutCfg( self ):
         # Init...
         shortcut_cfg_path = None
-        drives            = [ "C:\\fonts\\dashboard", "C:\\", "E:\\", "F:\\", "E:\\Dash", "E:\\Dashboard" ]
+        paths             = [ "C:\\fonts\\dashboard", "C:\\", "E:\\", "F:\\", "E:\\Dash", "E:\\Dashboard" ]
 
-        for drive in drives :
-            files = glob.glob( os.path.join( drive, "*.cfg" ) )
+        # Look through defined locations...
+        for path in paths :
+            files = glob.glob( os.path.join( path, "*.cfg" ) )
             if files :
-                shortcut_cfg_path = files[ 0 ]
-                break
+                # Pick the first fine that's a one liner...
+                for file in files :
+                    # Count number of lines...
+                    f     = open(file, "r")
+                    lines = f.readlines()
+                    f.close()
+                    
+                    # Great, found one...
+                    if len(lines) == 1 :
+                        shortcut_cfg_path = file
+                        break
             
         # Return value...
         return shortcut_cfg_path
@@ -149,7 +159,7 @@ class Main:
         # Confirm...
         #
         answer = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), 
-                                         xbmc.getLocalizedString(30415) % shortcut_cfg_path,
+                                         xbmc.getLocalizedString(30416) % shortcut_cfg_path,
                                          "", xbmc_home )
         # Cancel and return...
         if not answer :
