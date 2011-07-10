@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+  <!--
+   * Main
+   -->
+  <string id="30000">OpenSubtitles</string>
+  <string id="30001">Search by movie file...</string>
+  <string id="30002">Search for playing movie...</string>
+  
+  <!-- 
+   * Settings labels 
+   -->
+  <string id="30100">Version</string>
+  <string id="30101">Author</string>
+  <string id="30102">Website</string>
+  <string id="30103">Subtitle language #1</string>
+  <string id="30104">Subtitle language #2</string>
+  <string id="30105">Subtitle language #3</string>
+  <string id="30106">Subtitle directory</string>
+  <string id="30107">Movie</string>
+  <string id="30108">Custom</string>
+  
+    
+  <!--
+   * Messages
+   -->
+  <string id="30200">Browse for movie file...</string>
+  <string id="30201">Logging in anonymously...</string>
+  <string id="30202">Searching subtitles...</string>
+  <string id="30203">Logging out...</string>
+  <string id="30204">Communication error.</string>
+  <string id="30205">Try again, OpenSubtitles.org service may be unresponsive at times...</string>
+  <string id="30206">No subtitles found.</string>
+  <string id="30207">Downloading subtitle...</string>
+  <string id="30208">Not a zip file.</string>
+  <string id="30209">Try again, OpenSubtitles.org service may be busy at times...</string>
+  <string id="30210">Subtitle successfully extracted to:</string>
+  
+   
+  <!--
+   * Languages
+   -->
+  <string id="30300">None</string>
+  <string id="30301">Albanian</string>
+  <string id="30302">Arabic</string>
+  <string id="30303">Armenian</string>
+  <string id="30304">Bosnian</string>
+  <string id="30305">Bulgarian</string>
+  <string id="30306">Catalan</string>
+  <string id="30307">Chinese</string>
+  <string id="30308">Croatian</string>
+  <string id="30309">Czech</string>
+  <string id="30310">Danish</string>
+  <string id="30311">Dutch</string>
+  <string id="30312">English</string>
+  <string id="30313">Esperanto</string>
+  <string id="30314">Estonian</string>
+  <string id="30315">Farsi</string>
+  <string id="30316">Finnish</string>
+  <string id="30317">French</string>
+  <string id="30318">Galician</string>
+  <string id="30319">Georgian</string>
+  <string id="30320">German</string>
+  <string id="30321">Greek</string>
+  <string id="30322">Hebrew</string>
+  <string id="30323">Hindi</string>
+  <string id="30324">Hungarian</string>
+  <string id="30325">Icelandic</string>
+  <string id="30326">Indonesian</string>
+  <string id="30327">Italian</string>
+  <string id="30328">Japanese</string>
+  <string id="30329">Kazakh</string>
+  <string id="30330">Korean</string>
+  <string id="30331">Latvian</string>
+  <string id="30332">Lithuanian</string>
+  <string id="30333">Luxembourgish</string>
+  <string id="30334">Macedonian</string>
+  <string id="30335">Malay</string>
+  <string id="30336">Norwegian</string>
+  <string id="30337">Occitan</string>
+  <string id="30338">Polish</string>
+  <string id="30339">Portuguese</string>
+  <string id="30340">Portuguese-BR</string>
+  <string id="30341">Romanian</string>
+  <string id="30342">Russian</string>
+  <string id="30343">Serbian</string>
+  <string id="30344">Slovak</string>
+  <string id="30345">Slovenian</string>
+  <string id="30346">Spanish</string>
+  <string id="30347">Swedish</string>
+  <string id="30348">Syriac</string>
+  <string id="30349">Thai</string>
+  <string id="30350">Turkish</string>
+  <string id="30351">Ukrainian</string>
+  <string id="30352">Urdu</string>
+  <string id="30353">Vietnamese</string>
+
+</strings>
