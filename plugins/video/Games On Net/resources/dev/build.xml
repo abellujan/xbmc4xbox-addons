@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!-- Build file for Games On Net - XBMC video plugin -->
+<project name="Games On Net" default="package" basedir=".">
+	<!--
+	 * Variables
+	 -->
+	<property name="project.version" value="1.0"/>
+	
+	<!--
+	 * Package plugin for distribution
+	 -->
+	<target name="package" >
+		<!-- Init -->
+		<delete dir="./zip"/>
+		<mkdir  dir="./zip/${ant.project.name}"/>
+		
+		<!-- Copy entire project in a temporary location... -->
+		<copy todir="./zip/${ant.project.name}">
+			<fileset dir="../../../${ant.project.name}/">
+				<exclude name=".settings/**" />
+				<exclude name=".svn"/>
+				<exclude name="**/*.pyo"/>
+				<exclude name=".project"/>
+				<exclude name=".pydevproject"/>
+				<exclude name="resources/dev/**"/>
+				<exclude name="**/Thumbs.db" />
+			</fileset>
+		</copy>
+		
+		<!-- Zip up... -->
+		<zip destfile="./zip/${ant.project.name} v${project.version}.zip"
+		     basedir="./zip"
+			 level="9" />
+		
+		<!-- Clean up -->
+		<delete dir="./zip/${ant.project.name}"/>
+	</target>
+	
+</project>
