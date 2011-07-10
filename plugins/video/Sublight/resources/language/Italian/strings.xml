@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+  <!--
+   * Main
+   -->
+  <string id="30001">Ricerca per file...</string>
+  <string id="30002">Ricerca per titolo...</string>
+  <string id="30003">Ricerca video in riproduzione...</string>
+  
+  <!--
+   * Settings
+   -->
+  <string id="30100">Versione</string>
+  <string id="30101">Autore</string>
+  <string id="30102">Sito Web</string>
+  <string id="30103">Lingua #1</string>
+  <string id="30104">Lingua #2</string>
+  <string id="30105">Lingua #3</string>
+  <string id="30106">Cartella Sottotitoli</string>
+  <string id="30107">Film</string>
+  <string id="30108">Personalizza</string>
+  
+  <!--
+   * Languages
+   -->
+  <string id="30200">Niente</string>
+  <string id="30201">Albanese</string>
+  <string id="30202">Arabo</string>
+  <string id="30203">Bielorusso</string>
+  <string id="30204">Bosniaco (Latino)</string>
+  <string id="30205">Bulgaro</string>
+  <string id="30206">Catalano</string>
+  <string id="30207">Cinese</string>
+  <string id="30208">Croato</string>
+  <string id="30209">Ceco</string>
+  <string id="30210">Danese</string>
+  <string id="30211">Olandese</string>
+  <string id="30212">Inglese</string>
+  <string id="30213">Estone</string>
+  <string id="30214">Finlandese</string>
+  <string id="30215">Francese</string>
+  <string id="30216">Tedesco</string>
+  <string id="30217">Greco</string>
+  <string id="30218">Ebreo</string>
+  <string id="30219">Hindi</string>
+  <string id="30220">Ungherese</string>
+  <string id="30221">Islandese</string>
+  <string id="30222">Indonesiano</string>
+  <string id="30223">Irlandese</string>
+  <string id="30224">Italiano</string>
+  <string id="30225">Giapponese</string>
+  <string id="30226">Coreano</string>
+  <string id="30227">Lettone</string>
+  <string id="30228">Lituano</string>
+  <string id="30229">Macedone</string>
+  <string id="30230">Norvegese</string>
+  <string id="30231">Persiano</string>
+  <string id="30232">Polacco</string>
+  <string id="30233">Portoghese</string>
+  <string id="30234">Portoghese (Brasiliano)</string>
+  <string id="30235">Romeno</string>
+  <string id="30236">Russo</string>
+  <string id="30237">SerboLatino</string>
+  <string id="30238">Slovacco</string>
+  <string id="30239">Sloveno</string>
+  <string id="30240">Spagnolo</string>
+  <string id="30241">Spagnolo (Argentino)</string>
+  <string id="30242">Svedese</string>
+  <string id="30243">Tailandese</string>
+  <string id="30244">Turco</string>
+  <string id="30245">Ucraino</string>
+  <string id="30246">Vietnamita</string>
+  
+  <!--
+   * Messages
+   -->
+  <string id="30300">Log-in anonimo...</string>
+  <string id="30301">Ricerca dei sottotitoli...</string>
+  <string id="30302">Recupero sottotitolo(i)...</string>
+  <string id="30303">Recupero sottotitolo(i) [%s sec]...</string>
+  <string id="30304">Disconnessione...</string>
+  <string id="30305">Nessun sottotitolo trovato.</string>
+  <string id="30306">Sottotitolo(i) salvati in:</string>
+  <string id="30307">Seleziona il film:</string>
+</strings>
