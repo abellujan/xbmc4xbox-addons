@@ -3,7 +3,8 @@ XBMC SVN Installer
 v1.9 beta (Friday, 8 July 2011)
  - [Xbox] upgrade - copy Q:\system\profiles.xml (thanks to Gink);
  - [Xbox] upgrade - copy Q:\system\FileZilla Server.xml;
- - [Xbox] update shortcut cfg - only consider one line .cfg's (avoid updating other larger config files)
+ - [Xbox] upgrade - copy Q:\web (thanks to VanZan);
+ - [Xbox] update shortcut cfg - only consider one line .cfg's (avoid updating other larger config files);
 
 v1.8 (Wednesday, 27 April 2011)
  - "news" section is back;

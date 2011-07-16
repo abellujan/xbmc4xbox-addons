@@ -43,7 +43,7 @@ class Main:
         #
         # Sorry, could not find any of the above...
         #
-        xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30417) )
+        xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30427) )
             
     #
     # Check if the path to current XBMC...
@@ -94,7 +94,7 @@ class Main:
         #
         dash1Name = "dash1Name = %s" % ( xbmc_home[ 0:2 ] + xbmc_home[ 3: ] )
         answer    = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), 
-                                            xbmc.getLocalizedString(30416) % x2config_path,
+                                            xbmc.getLocalizedString(30426) % x2config_path,
                                             "", dash1Name )
         # Cancel and return...
         if not answer :
@@ -159,7 +159,7 @@ class Main:
         # Confirm...
         #
         answer = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), 
-                                         xbmc.getLocalizedString(30416) % shortcut_cfg_path,
+                                         xbmc.getLocalizedString(30426) % shortcut_cfg_path,
                                          "", xbmc_home )
         # Cancel and return...
         if not answer :
