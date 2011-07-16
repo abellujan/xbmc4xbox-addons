@@ -44,19 +44,21 @@
   <string id="30407">Extracting...</string>
   <string id="30408">Transfer your data? (settings, skins, scripts, plugins)</string>
   <string id="30409">            YES = Upgrade               NO = Fresh install</string>
-  <string id="30410">(1 of 5) Copying system data...</string>
-  <string id="30411">(2 of 5) Copying user data...</string>
-  <string id="30412">(3 of 5) Copying skins...</string>
-  <string id="30413">(4 of 5) Copying scripts...</string>
-  <string id="30414">(5 of 5) Copying plugins...</string>
-  <string id="30415">Installation complete. Would you like to run it?</string>
-  <string id="30416">Update %s?</string>
-  <string id="30417">Sorry, could not find x2config.ini or a shortcut .cfg</string>
+  
+  <string id="30410">(1 of 6) Copying system data...</string>
+  <string id="30411">(2 of 6) Copying user data...</string>
+  <string id="30412">(3 of 6) Copying skins...</string>
+  <string id="30413">(4 of 6) Copying scripts...</string>
+  <string id="30414">(5 of 6) Copying plugins...</string>
+  <string id="30415">(6 of 6) Copying web...</string>
+  
+  <string id="30425">Installation complete. Would you like to run it?</string>
+  <string id="30426">Update %s?</string>
+  <string id="30427">Sorry, could not find x2config.ini or a shortcut .cfg</string>
   
   <string id="30450">ERROR: Invalid installation path</string>
   <string id="30451">ERROR: Invalid zip archive</string>
   <string id="30452">ERROR: Could not determine current XBMC location</string>
-  
   
   <!--
    * Texts

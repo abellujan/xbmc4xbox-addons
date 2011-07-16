@@ -420,7 +420,23 @@ class Main:
                     # If the new plugin folder exists, skip (maintained in SVN)...
                     if not os.path.exists( new_plugin ) :
                         shutil.copytree( old_plugin, new_plugin )
-                        
+            
+            #########################
+            #
+            # (6) Transfer web...
+            #
+            #########################
+            old_web_path = os.path.join( xbmc.translatePath( "special://home" ), "web" )
+            new_web_path = os.path.join( install_build_path, "web" )
+            
+            # Check if old web exists, and no new web folder...
+            if os.path.isdir(old_web_path) and not os.path.isdir(new_web_path) :
+                # Progress bar...
+                dialogProgress.update(100, xbmc.getLocalizedString(30415), old_web_path, new_web_path )
+
+                # Copy...                
+                shutil.copytree( old_web_path, new_web_path )
+            
             #
             # Upgrade finished
             #
@@ -430,7 +446,7 @@ class Main:
         #
         # Installation complete
         #
-        answer_run = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30415), install_build_path )
+        answer_run = xbmcgui.Dialog().yesno( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30425), install_build_path )
         if answer_run :
             xbmc.executebuiltin('XBMC.RunXBE(%s)' % os.path.join( install_build_path, "default.xbe" ) )
 
