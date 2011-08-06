@@ -34,7 +34,7 @@ class Main :
         #
         else :
             browse = xbmcgui.Dialog()
-            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mpg|.mpeg|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.mkv|.ogm")
+            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mp4|.mpg|.mpeg|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.mkv|.ogm")
             
             # No file selected...
             if movieFullPath == "" :
