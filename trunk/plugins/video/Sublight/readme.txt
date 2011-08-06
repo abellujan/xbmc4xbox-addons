@@ -2,6 +2,7 @@ Sublight
 ~~~~~~~~
  v1.9 beta (Saturday, 6 August 2011):
   - allow browsing for .mp4 files;
+  - improved file name cleanup;
 
  v1.85 beta (Thursday, 10 December 2010):
   - online movie / not scraped - ask the user for movie name when searching for playing movie;
