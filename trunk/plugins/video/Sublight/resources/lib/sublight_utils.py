@@ -157,7 +157,7 @@ def getMovieTitleAndYear( filename ):
                'proper', '720p', '1080p', '1080i', 'bluray']
 
     # Clean file name from all kinds of crap...
-    for char in ['[', ']', '_', '(', ')']:
+    for char in ['[', ']', '_', '(', ')', '{', '}']:
         name = name.replace(char, ' ')
     
     # if there are no spaces, start making beginning from dots...
