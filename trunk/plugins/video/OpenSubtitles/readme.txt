@@ -1,5 +1,7 @@
 OpenSubtitles
 ~~~~~~~~~~~~~
+v1.5 beta (6 August 2011):
+ - allow browsing for .mp4 files;
 
 v1.42 (17 October 2010):
  - episode subtitle named incorrectly (thanks to nomorgan);
