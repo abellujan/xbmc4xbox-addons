@@ -1,6 +1,6 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
-v1.9 beta (Friday, 8 July 2011)
+v1.9 (Tuesday, 23 August 2011)
  - [Xbox] upgrade - copy Q:\system\profiles.xml (thanks to Gink);
  - [Xbox] upgrade - copy Q:\system\FileZilla Server.xml;
  - [Xbox] upgrade - copy Q:\web (thanks to VanZan);
