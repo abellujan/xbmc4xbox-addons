@@ -1,15 +1,20 @@
 #
 # Imports
 #
+from BeautifulSoup import BeautifulSoup, SoupStrainer
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-import urllib
-import re
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -109,14 +114,14 @@ class Main:
 		entry_no_end      = reviewlist_result.group(2)		
 
 		# Next page entry...
-		listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-gameplay&plugin_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
 		
 		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + xbmc.getLocalizedString(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
+		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + __language__(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )

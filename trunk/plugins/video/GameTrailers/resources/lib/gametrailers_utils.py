@@ -4,6 +4,8 @@ import urllib
 import urllib2
 import gzip
 import StringIO
+import urlparse
+
 
 class HTTPCommunicator :
     #
@@ -64,3 +66,16 @@ class HTTPCommunicator :
 
         # Return value
         return htmlData
+    
+    #
+    # Check if URL exists
+    #
+    def exists( self, url ):
+        p = urlparse.urlparse(url)
+        h = httplib.HTTP(p[1]) 
+        h.putrequest('HEAD', p[2]) 
+        h.endheaders() 
+        if h.getreply()[0] == 200: 
+            return True
+        else: 
+            return False 

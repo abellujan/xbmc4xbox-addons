@@ -1,15 +1,20 @@
 #
 # Imports
 #
+from BeautifulSoup import BeautifulSoup, SoupStrainer
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-import urllib
-import re
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -31,7 +36,7 @@ class Main:
 		self.query           = urllib.unquote( params[ "query" ] )
 
 		# Settings
-		self.video_quality   = xbmcplugin.getSetting ("video_quality")
+		self.video_quality   = __settings__.getSetting ("video_quality")
 
 		# Ask for query if none was passed...
 		if self.query == "" :
@@ -77,7 +82,7 @@ class Main:
 
 		# No results found...
 		if len(divs_content_row_super) == 0 :
-			xbmcgui.Dialog().ok( xbmc.getLocalizedString(30008), xbmc.getLocalizedString(30505), self.query )
+			xbmcgui.Dialog().ok( __language__(30008), __language__(30505), self.query )
 			xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
 			return			
 		
@@ -93,11 +98,14 @@ class Main:
 				sd_movie_page_url = a_list[1][ "href" ]
 				if (self.video_quality == "1" and hd_movie_page_url) :      # HD
 					video_page_url = hd_movie_page_url
+					overlay        = xbmcgui.ICON_OVERLAY_HD
 				else :
 					video_page_url = sd_movie_page_url                      # SD
+					overlay        = xbmcgui.ICON_OVERLAY_NONE
 			else:
 				div_newestlist_movie_sd = div_gamepage_content_row_thumb.find( "div", { "class" : "newestlist_movie_format_SD" } )
-				video_page_url          = div_newestlist_movie_sd.a[ "href" ]			
+				video_page_url          = div_newestlist_movie_sd.a[ "href" ]
+				overlay                 = xbmcgui.ICON_OVERLAY_NONE
 			
 			# Thumbnail URL...
 			thumbnail_url = div_gamepage_content_row_thumb.a.img[ "src" ]
@@ -129,7 +137,7 @@ class Main:
 			
 			# Add to list...
 			listitem        = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail_url )
-			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : date } )
+			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : date, "Overlay" : overlay } )
 			plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
@@ -152,14 +160,14 @@ class Main:
 
 		# Next page entry...
 		if entry_no_end < entry_no_total :
-			listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+			listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 			xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-search&query=%s&plugin_category=%s&page=%i" % ( sys.argv[0], self.query, self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
 		
 		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + xbmc.getLocalizedString(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
+		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + __language__(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
@@ -169,7 +177,7 @@ class Main:
 		#
 		#
 		try :
-			saved_queries = eval( xbmcplugin.getSetting( "saved_queries" ) )
+			saved_queries = eval( __settings__.getSetting( "saved_queries" ) )
 		except :
 			saved_queries = []
 		
@@ -184,4 +192,4 @@ class Main:
 			saved_queries.sort()
 			
 			# Save queries...
-			xbmcplugin.setSetting( "saved_queries", repr( saved_queries ))
+			__settings__.setSetting( "saved_queries", repr( saved_queries ))

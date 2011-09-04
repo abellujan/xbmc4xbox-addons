@@ -1,20 +1,20 @@
 #
 # Imports
 #
+from BeautifulSoup import BeautifulSoup, SoupStrainer
+from gametrailers_utils import HTTPCommunicator
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-import urllib
-import re
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
-from gametrailers_utils import HTTPCommunicator
 
 #
 # Constants
 # 
+__settings__ = xbmcplugin
 __language__ = xbmc.getLocalizedString
 
 #
@@ -37,7 +37,7 @@ class Main:
 		self.entries_par_page = 10
 
 		# Settings
-		self.video_quality   = xbmcplugin.getSetting ("video_quality")
+		self.video_quality   = __settings__.getSetting ("video_quality")
 
 		#
 		# Get the videos...

@@ -13,6 +13,12 @@ from BeautifulSoup      import BeautifulSoup
 from gametrailers_utils import HTTPCommunicator
 
 #
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
+
+#
 # Main class
 #
 class Main:
@@ -31,7 +37,7 @@ class Main:
 		self.current_page    =      int( params.get( "page", "1" ) )
 		
 		# Settings
-		self.video_quality   = xbmcplugin.getSetting ("video_quality")		
+		self.video_quality   = __settings__.getSetting ("video_quality")		
 		
 		#
 		# Get the videos...
@@ -71,7 +77,7 @@ class Main:
 		for video in videos :
 			# Add to list...
 			listitem        = xbmcgui.ListItem( video[ "title" ], iconImage="DefaultVideo.png", thumbnailImage=video[ "thumbnail" ] )
-			listitem.setInfo( "video", { "Title" : video[ "title" ], "Studio" : "GameTrailers", "Plot" : video[ "plot" ], "Genre" : video[ "date" ] } )
+			listitem.setInfo( "video", { "Title" : video[ "title" ], "Studio" : "GameTrailers", "Plot" : video[ "plot" ], "Genre" : video[ "date" ], "Overlay" : video[ "overlay" ] } )
 			plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video[ "video_page" ] ) )
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
@@ -87,14 +93,14 @@ class Main:
 		entry_no_end      = reviewlist_result.group(2)
 
 		# Next page entry...
-		listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-top20&plugin_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
 		
 		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + xbmc.getLocalizedString(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
+		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + __language__(30501) + ")" ) % ( self.plugin_category, entry_no_start, entry_no_end ) )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
@@ -114,6 +120,8 @@ class Main:
 						
 			# Video page URL....
 			video_page_url = div_top20_content_row_thumb.a[ "href" ]
+			overlay        = xbmcgui.ICON_OVERLAY_NONE
+
 			div_top20_movie_format_sd_hd = div_top20_content_row_thumb.find( "div", { "class" : "top20_movie_format_SDHD" } )
 			if (div_top20_movie_format_sd_hd) :
 				a_list = div_top20_movie_format_sd_hd.findAll( "a" )
@@ -121,11 +129,14 @@ class Main:
 				sd_movie_page_url = a_list[1][ "href" ]
 				if (self.video_quality == "1" and hd_movie_page_url) :      # HD
 					video_page_url = hd_movie_page_url
+					overlay        = xbmcgui.ICON_OVERLAY_HD
 				else :
 					video_page_url = sd_movie_page_url                      # SD
+					overlay        = xbmcgui.ICON_OVERLAY_NONE
 			else:
 				div_top20_movie_format_sd = div_top20_content_row_thumb.find( "div", { "class" : "top20_movie_format_SD" } )
-				video_page_url            = div_top20_movie_format_sd.a[ "href" ]			
+				video_page_url            = div_top20_movie_format_sd.a[ "href" ]
+				overlay                   = xbmcgui.ICON_OVERLAY_NONE
 			
 			# Thumbnail URL...
 			thumbnail_url  = div_top20_content_row_thumb.a.img[ "src" ]
@@ -157,7 +168,7 @@ class Main:
 				plot = div_top20_at_content_summary_text.string
 			
 			# Add entry to the list...
-			video = { "title" : title, "plot" : plot, "date" : date, "thumbnail" : thumbnail_url, "video_page" : video_page_url }
+			video = { "title" : title, "plot" : plot, "date" : date, "thumbnail" : thumbnail_url, "video_page" : video_page_url, "overlay" : overlay }
 			videos.append( video )
 			
 		# Return value

@@ -1,17 +1,22 @@
 #
 # Imports
 #
+from BeautifulSoup import BeautifulSoup, SoupStrainer
+from gametrailers_utils import HTTPCommunicator
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xml.dom.minidom
-import re
-import urllib
-from BeautifulSoup      import SoupStrainer 
-from BeautifulSoup      import BeautifulSoup
-from gametrailers_utils import HTTPCommunicator
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -45,11 +50,10 @@ class Main:
 		self.video_players = { "0" : xbmc.PLAYER_CORE_AUTO,
 							   "1" : xbmc.PLAYER_CORE_DVDPLAYER,
 							   "2" : xbmc.PLAYER_CORE_MPLAYER }
-		self.video_player  = xbmcplugin.getSetting ("video_player")
+		self.video_player  = __settings__.getSetting("video_player")
 		
-		self.video_format  = xbmcplugin.getSetting ("video_format")
-		
-		self.video_quality = xbmcplugin.getSetting ("video_quality")
+		self.video_format  = __settings__.getSetting("video_format")
+		self.video_quality = __settings__.getSetting("video_quality")
 
 		#
 		# Play video...
@@ -76,7 +80,7 @@ class Main:
 		# Show wait dialog while parsing data...
 		#
 		dialogWait = xbmcgui.DialogProgress()
-		dialogWait.create( xbmc.getLocalizedString(30504), title )
+		dialogWait.create( __language__(30504), title )
 		
 		#
 		# Video page URL = /player/48119.html
@@ -235,11 +239,10 @@ class Main:
 		movie_id = self.VIDEO_URL_RE.search( video_page_url ).group(2)
 		
 		# 
-		# Get HTML page...
-		# 
-		usock    = urllib.urlopen( "http://mosii.gametrailers.com/getmediainfo4.php?hd=1&mid=%s" % movie_id )
-		htmlData = usock.read()
-		usock.close()
+		# Get video URL (method #1)...
+		#
+		httpCommunicator = HTTPCommunicator()
+		htmlData         = httpCommunicator.get( "http://mosii.gametrailers.com/getmediainfo4.php?hd=1&mid=%s" % movie_id )
 				
 		# Debug
 		if (self.DEBUG) :
@@ -266,13 +269,31 @@ class Main:
 			params     = dict(part.split('=', 1) for part in htmlData.split('&'))
 			umfilename = urllib.unquote( params[ "umfilename" ] )
 		
+		#
 		# Video URL...
+		#
 		if (self.video_format == "0") :
 			video_url = "http://trailers.gametrailers.com/gt_vault/%s.flv" % umfilename
 		elif (self.video_format == "1") :
 			video_url = "http://trailers.gametrailers.com/gt_vault/%s.mov" % umfilename
 		elif (self.video_format == "2") :
 			video_url = "http://trailers.gametrailers.com/gt_vault/%s.wmv" % umfilename
+			
+		#
+		# Get video URL (method #2)...
+		#
+		if not httpCommunicator.exists(video_url) :
+			neo_xml_url  = "http://www.gametrailers.com/neo/?page=xml.mediaplayer.Mediagen&movieId=%s" % movie_id
+			usock        = urllib.urlopen( neo_xml_url )
+			xmldoc       = xml.dom.minidom.parse( usock )
+			usock.close()
+			
+			video_nodes = xmldoc.documentElement.getElementsByTagName( "video" )
+			if video_nodes != None :
+				src_nodes = video_nodes[0].getElementsByTagName( "src" )
+				if src_nodes != None :
+					video_url = src_nodes[0].childNodes[0].nodeValue
+			
 
 		#
 		# Return value
