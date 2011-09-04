@@ -3,6 +3,8 @@ http://www.gametrailers.com/
 
 Changelog:
 ~~~~~~~~~~
+v2.3 beta (Sunday, 4 September 2011):
+  - website changes;
 
 v2.2 (Wednesday, 2 February 2011):
   - Shows > GTTV broken (website change) - thanks to VelvetKevorkian;

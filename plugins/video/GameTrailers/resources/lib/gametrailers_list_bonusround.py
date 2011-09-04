@@ -1,15 +1,21 @@
 #
 # Imports
 #
-import re
+from BeautifulSoup import BeautifulSoup
+from gametrailers_utils import HTTPCommunicator
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-import urllib
-from BeautifulSoup      import BeautifulSoup
-from gametrailers_utils import HTTPCommunicator
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -82,14 +88,14 @@ class Main:
             xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
         # Next page entry...
-        listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+        listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
         xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-bonusround&plugin_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
         
         # Label (top-right)...
-        xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category="%s  (%s)" % (self.plugin_category, xbmc.getLocalizedString(30502) % self.current_page ) )
+        xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category="%s  (%s)" % (self.plugin_category, __language__(30502) % self.current_page ) )
         
         # End of directory...
         xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )

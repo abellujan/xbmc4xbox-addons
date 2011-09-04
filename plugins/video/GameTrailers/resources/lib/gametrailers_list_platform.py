@@ -1,16 +1,21 @@
 #
 # Imports
 #
+from BeautifulSoup import BeautifulSoup, SoupStrainer
+from gametrailers_utils import HTTPCommunicator
 import os
+import re
 import sys
+import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-import urllib
-import re
-from BeautifulSoup      import SoupStrainer
-from BeautifulSoup      import BeautifulSoup
-from gametrailers_utils import HTTPCommunicator
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -32,7 +37,7 @@ class Main:
 		self.platform        =       params[ "platform" ]
 
 		# Settings
-		self.video_quality   = xbmcplugin.getSetting ("video_quality")
+		self.video_quality   = __settings__.getSetting ("video_quality")
 
 		#
 		# Get the videos...
@@ -79,11 +84,14 @@ class Main:
 				sd_movie_page_url = a_list[1][ "href" ]
 				if (self.video_quality == "1" and hd_movie_page_url) :      # HD
 					video_page_url = hd_movie_page_url
+					overlay        = xbmcgui.ICON_OVERLAY_HD
 				else :
 					video_page_url = sd_movie_page_url                      # SD
+					overlay        = xbmcgui.ICON_OVERLAY_NONE
 			else:
 				div_newestlist_movie_sd = div_gamepage_content_row_thumb.find( "div", { "class" : "newestlist_movie_format_SD" } )
 				video_page_url          = div_newestlist_movie_sd.a[ "href" ]
+				overlay                 = xbmcgui.ICON_OVERLAY_NONE
 			
 			# Thumbnail URL...
 			thumbnail_url  = div_gamepage_content_row_thumb.img[ "src" ]
@@ -114,19 +122,19 @@ class Main:
 			
 			# Add to list...
 			listitem        = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail_url )
-			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : date } )
+			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : date, "Overlay" : overlay } )
 			plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
 		# Next page entry...
-		listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-platform&platform=%s&plugin_category=%s&page=%i" % ( sys.argv[0], self.platform, self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
 		
 		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + xbmc.getLocalizedString(30502) + ")" ) % ( self.plugin_category, self.current_page ) )
+		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + __language__(30502) + ")" ) % ( self.plugin_category, self.current_page ) )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
