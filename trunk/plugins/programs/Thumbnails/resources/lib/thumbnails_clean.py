@@ -20,6 +20,7 @@ from os import linesep
 #
 class GUI( xbmcgui.WindowXMLDialog ):
     ACTION_EXIT_SCRIPT = ( 9, 10, 216, 257, 61448, )
+    THUMB_SUB_DIRS     = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "fanart" ]
 
     #
     #
@@ -138,7 +139,6 @@ class GUI( xbmcgui.WindowXMLDialog ):
             # Clean video thumbnails...
             dialogProgress.update( 85, xbmc.getLocalizedString(30202), "Thumbnails\Video")
             self.cleanThumbnails( videoThumbPath, except_tbns )
-            print except_tbns
             
             # Scan thumbnails folder (after)...
             dialogProgress.update( 90, xbmc.getLocalizedString(30201), "Thumbnails\Video")
@@ -192,13 +192,22 @@ class GUI( xbmcgui.WindowXMLDialog ):
         files_count = 0
         files_size  = 0        
         
-        # Scan sub-folders...
-        for subdir in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "fanart" ] :
+        # Scan thumb sub-folders...
+        for subdir in self.THUMB_SUB_DIRS :
             thumb_dir = os.path.join( path, subdir )
             if os.path.isdir( thumb_dir ) :
+                # .tbn files
                 tbn_files = glob.glob( os.path.join( thumb_dir, "*.tbn" ) )
-                for tbn_file in  tbn_files :
+                for tbn_file in tbn_files :
                     statinfo    = os.stat( tbn_file )
+                    files_count = files_count + 1
+                    files_size  = files_size  + statinfo.st_size
+                    statinfo    = None
+                    
+                # .dds files
+                dds_files = glob.glob( os.path.join( thumb_dir, "*.dds" ) )
+                for dds_file in dds_files :
+                    statinfo    = os.stat( dds_file )
                     files_count = files_count + 1
                     files_size  = files_size  + statinfo.st_size
                     statinfo    = None
@@ -209,27 +218,30 @@ class GUI( xbmcgui.WindowXMLDialog ):
     #
     # Clean thumbnails from path...
     #
-    def cleanThumbnails(self, path, exceptions = () ):
-        # Init
-        files_count = 0
-        files_size  = 0        
-        
-        # Scan folder (no sub-folders)...
-        for subdir in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "fanart" ] :
+    def cleanThumbnails(self, path, tbn_exceptions = () ):
+        # Scan thumb sub-folders...
+        for subdir in self.THUMB_SUB_DIRS :
             thumb_dir = os.path.join( path, subdir )
             if os.path.isdir( thumb_dir ) :
-                tbn_files = os.listdir( thumb_dir )
-                for tbn_file in tbn_files :
-                    if tbn_file.endswith( ".tbn" ) and \
-                       not tbn_file in exceptions :
-                        tbn_full_path = os.path.join( thumb_dir, tbn_file )
-                        statinfo      = os.stat( tbn_full_path )
-                        
-                        files_count = files_count + 1
-                        files_size  = files_size  + statinfo.st_size
-                        
-                        # Remove thumbnail...
-                        os.remove( tbn_full_path )
+                files = os.listdir( thumb_dir )
+                for file in files :
+                    ( name, ext ) = os.path.splitext( file )
+                    
+                    # .tbn
+                    if ext == ".tbn" :
+                        if not file in tbn_exceptions :
+                            # Remove thumbnail...
+                            tbn_full_path = os.path.join( thumb_dir, file )
+                            os.remove( tbn_full_path )
+
+                    # .dds
+                    elif ext == ".dds" :
+                        tbn_file = name + ".tbn"
+                        if not tbn_file in tbn_exceptions :
+                            # Remove thumbnail...
+                            dds_full_path = os.path.join( thumb_dir, file )
+                            os.remove( dds_full_path )
+
 
     #
     # Scan library for Movie thumbnails...
