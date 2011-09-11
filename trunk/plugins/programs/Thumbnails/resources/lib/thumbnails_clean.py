@@ -132,16 +132,20 @@ class GUI( xbmcgui.WindowXMLDialog ):
             dialogProgress.update( 75, xbmc.getLocalizedString(30201), "Library\Video\Episodes")
             self.scanEpisodeLibrary( except_tbns )
             
+            # Library - Seasons
+            dialogProgress.update( 80, xbmc.getLocalizedString(30201), "Library\Video\Seasons")
+            self.scanSeasonLibrary( except_tbns )
+            
             # Library - Actors...
-            dialogProgress.update( 80, xbmc.getLocalizedString(30201), "Library\Video\Actors")
-            self.scanActorsLibrary( except_tbns );
+            dialogProgress.update( 85, xbmc.getLocalizedString(30201), "Library\Video\Actors")
+            self.scanActorsLibrary( except_tbns )
             
             # Clean video thumbnails...
-            dialogProgress.update( 85, xbmc.getLocalizedString(30202), "Thumbnails\Video")
+            dialogProgress.update( 90, xbmc.getLocalizedString(30202), "Thumbnails\Video")
             self.cleanThumbnails( videoThumbPath, except_tbns )
             
             # Scan thumbnails folder (after)...
-            dialogProgress.update( 90, xbmc.getLocalizedString(30201), "Thumbnails\Video")
+            dialogProgress.update( 95, xbmc.getLocalizedString(30201), "Thumbnails\Video")
             after_file_count, after_total_size = self.scanPath( videoThumbPath )
             
             # Print results...
@@ -340,6 +344,56 @@ class GUI( xbmcgui.WindowXMLDialog ):
         xml_episodes  = None
         fieldNodes    = None
         beautifulSoup = None
+
+    #
+    # Scan library for season thumbnails...
+    #
+    def scanSeasonLibrary ( self, tbns_set ):
+        #
+        # *All Seasons
+        #
+        sql_seasons = "select path.strPath"                                                    \
+                      " from path"                                                             \
+                      " join tvshowlinkpath on tvshowlinkpath.idPath = path.idPath"
+        xml_seasons = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_seasons ), )
+        
+        # Thumbnails...
+        beautifulSoup    = BeautifulSoup( xml_seasons )
+        fieldNodes       = beautifulSoup.findAll( "field" )
+        
+        for fieldNode in fieldNodes:
+            season_full_path = "season%s%s" % ( fieldNode.contents[0], xbmc.getLocalizedString(20366) )
+            season_thumbnail = xbmc.getCacheThumbName( season_full_path )
+            
+            tbns_set.add( season_thumbnail )
+        
+        #
+        # Season (1..n)
+        #
+        sql_seasons = "select episodeview.c12, path.strPath"                                   \
+                      " from episodeview"                                                      \
+                      " join tvshowlinkpath on tvshowlinkpath.idShow = episodeview.idShow "    \
+                      " join path           on path.idPath           = tvshowlinkpath.idPath " \
+                      " group by path.strPath, episodeview.c12"
+        xml_seasons = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( sql_seasons ), )
+        
+        # Thumbnails...
+        beautifulSoup    = BeautifulSoup( xml_seasons )
+        fieldNodes       = beautifulSoup.findAll( "field" )
+        fieldNodesTuples = zip( fieldNodes[::2], fieldNodes[1::2])
+        
+        for fieldNodeSeason, fieldNodePath in fieldNodesTuples:
+            season_full_path = "season%s%s %s" % ( fieldNodePath.contents[0], xbmc.getLocalizedString(20373), fieldNodeSeason.contents[0] )
+            season_thumbnail = xbmc.getCacheThumbName( season_full_path )
+            
+            tbns_set.add( season_thumbnail )
+            
+        # Cleanup
+        sql_seasons      = None
+        xml_seasons      = None
+        fieldNodes       = None
+        fieldNodesTuples = None
+        beautifulSoup    = None        
                 
     #
     # Format file size

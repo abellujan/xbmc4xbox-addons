@@ -1,8 +1,9 @@
 Changelog:
 ~~~~~~~~~~
 
-v1.2 beta (Thursday, 8 September 2011):
+v1.2 beta 2 (Thursday, 8 September 2011):
   - clean .dds thumbnails (thanks to rudeboyx & ocmdiaz714);
+  - clean Season thumbnails correctly (thanks to ocmdiaz714);
 
 v1.1 :
   - rewrite;

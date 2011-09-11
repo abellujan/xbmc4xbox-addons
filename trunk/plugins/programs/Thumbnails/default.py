@@ -2,7 +2,7 @@
 #
 # Thumbnails - program plugin
 #
-# Version 1.2 beta
+# Version 1.2 beta 2
 # 
 # Author(s):
 #
@@ -16,8 +16,8 @@
 __plugin__  = "Thumbnails"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "8 September 2011"
-__version__ = "1.2 beta"
+__date__    = "11 September 2011"
+__version__ = "1.2 beta 2"
 
 #
 # Imports
