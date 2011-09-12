@@ -3,7 +3,7 @@
 # GameTrailers - XBMC video plugin
 # http://www.gametrailers.com
 #
-# Version 2.3 beta
+# Version 2.3 beta 2
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -22,8 +22,8 @@
 __plugin__  = "GameTrailers"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "4 September 2011"
-__version__ = "2.3 beta"
+__date__    = "12 September 2011"
+__version__ = "2.3 beta 2"
 
 #
 # Imports

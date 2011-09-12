@@ -1,18 +1,13 @@
 #
 # Imports
 #
+from gametrailers_const import __settings__, __language__
 import os
 import sys
 import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-
-#
-# Constants
-# 
-__settings__ = xbmcplugin
-__language__ = xbmc.getLocalizedString
 
 #
 # Main class

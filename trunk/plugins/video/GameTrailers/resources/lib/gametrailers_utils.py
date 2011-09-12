@@ -6,7 +6,9 @@ import gzip
 import StringIO
 import urlparse
 
-
+#
+#
+#
 class HTTPCommunicator :
     #
     # POST
@@ -66,16 +68,21 @@ class HTTPCommunicator :
 
         # Return value
         return htmlData
-    
+
     #
     # Check if URL exists
     #
     def exists( self, url ):
-        p = urlparse.urlparse(url)
-        h = httplib.HTTP(p[1]) 
-        h.putrequest('HEAD', p[2]) 
-        h.endheaders() 
-        if h.getreply()[0] == 200: 
+        try :
+            #urllib2.install_opener(
+            #    urllib2.build_opener(
+            #        urllib2.ProxyHandler({'http': 'http://localhost:9999'})
+            #    )
+            #)
+            request            = urllib2.Request( url )
+            request.get_method = lambda : 'HEAD'
+            response           = urllib2.urlopen( request )
+            response.close()
             return True
-        else: 
-            return False 
+        except :
+            return False
