@@ -142,7 +142,7 @@ class Main:
 		# Alert user...
 		#
 		else :
-			xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30505) )
+			xbmcgui.Dialog().ok( __language__(30000), __language__(30505) )
 		
 	#
 	# Video page URL = /player/48119.html
