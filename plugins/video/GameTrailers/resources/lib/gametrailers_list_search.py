@@ -1,7 +1,8 @@
 #
 # Imports
 #
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from BeautifulSoup      import BeautifulSoup, SoupStrainer
+from gametrailers_const import __settings__, __language__
 import os
 import re
 import sys
@@ -9,12 +10,6 @@ import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-
-#
-# Constants
-# 
-__settings__ = xbmcplugin
-__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -82,7 +77,7 @@ class Main:
 
 		# No results found...
 		if len(divs_content_row_super) == 0 :
-			xbmcgui.Dialog().ok( __language__(30008), __language__(30505), self.query )
+			xbmcgui.Dialog().ok( __language__(30008), __language__(30506), self.query )
 			xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
 			return			
 		

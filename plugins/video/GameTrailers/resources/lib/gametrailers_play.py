@@ -1,7 +1,8 @@
 #
 # Imports
 #
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from BeautifulSoup      import BeautifulSoup, SoupStrainer
+from gametrailers_const import __settings__, __language__
 from gametrailers_utils import HTTPCommunicator
 import os
 import re
@@ -9,14 +10,7 @@ import sys
 import urllib
 import xbmc
 import xbmcgui
-import xbmcplugin
 import xml.dom.minidom
-
-#
-# Constants
-# 
-__settings__ = xbmcplugin
-__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -116,23 +110,39 @@ class Main:
 			video_urls = self._getVideoUrl6( self.video_page_url )
 
 		#
+		# Check video URLs...
+		#
+		httpCommunicator = HTTPCommunicator()
+		have_valid_url   = False
+		for video_url in video_urls :
+			if httpCommunicator.exists( video_url ) :
+				have_valid_url = True
+				break
+		
+		#
 		# Play video...
 		#
-		playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
-		playlist.clear()
-
-		for video_url  in video_urls :
-			listitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
-			listitem.setInfo( "video", { "Title": title, "Studio" : studio, "Plot" : plot, "Genre" : genre } )
-			playlist.add( video_url, listitem )
-
-		# Close wait dialog...
-		dialogWait.close()
-		del dialogWait
-		
-		# Play video...
-		xbmcPlayer = xbmc.Player( self.video_players[ self.video_player ] )
-		xbmcPlayer.play( playlist )
+		if have_valid_url :
+			playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
+			playlist.clear()
+	
+			for video_url  in video_urls :
+				listitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
+				listitem.setInfo( "video", { "Title": title, "Studio" : studio, "Plot" : plot, "Genre" : genre } )
+				playlist.add( video_url, listitem )
+	
+			# Close wait dialog...
+			dialogWait.close()
+			del dialogWait
+			
+			# Play video...
+			xbmcPlayer = xbmc.Player( self.video_players[ self.video_player ] )
+			xbmcPlayer.play( playlist )
+		#
+		# Alert user...
+		#
+		else :
+			xbmcgui.Dialog().ok( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(30505) )
 		
 	#
 	# Video page URL = /player/48119.html
@@ -179,20 +189,17 @@ class Main:
 		# 
 		# Get HTML page...
 		# 
-		usock    = urllib.urlopen( video_page_url )
-		htmlData = usock.read()
-		usock.close()
-
-		# Debug
-		if (self.DEBUG) :
-			f = open(os.path.join( xbmc.translatePath( "special://profile" ), "plugin_data", "video", sys.modules[ "__main__" ].__plugin__, "video_page.html" ), "w")
-			f.write( htmlData )
-			f.close()
+		httpCommunicator = HTTPCommunicator()
+		htmlData         = httpCommunicator.get( video_page_url )
 
 		# Parse HTML page...
 		beautifulSoup = BeautifulSoup( htmlData )
 		embed         = beautifulSoup.find( "embed" )
-		filename      = embed[ "flashvars" ][ 9: ]
+		
+		if embed == None :
+			return []
+
+		filename      = embed[ "flashvars" ][ 9: ]		
 		url           = re.compile( "(.+?)&" ).search( filename ).group( 1 )
 		
 		#
@@ -293,7 +300,6 @@ class Main:
 				src_nodes = video_nodes[0].getElementsByTagName( "src" )
 				if src_nodes != None :
 					video_url = src_nodes[0].childNodes[0].nodeValue
-			
 
 		#
 		# Return value

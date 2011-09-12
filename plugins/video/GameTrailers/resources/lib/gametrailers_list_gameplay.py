@@ -1,7 +1,8 @@
 #
 # Imports
 #
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from BeautifulSoup      import BeautifulSoup, SoupStrainer
+from gametrailers_const import __settings__, __language__
 import os
 import re
 import sys
@@ -9,12 +10,6 @@ import urllib
 import xbmc
 import xbmcgui
 import xbmcplugin
-
-#
-# Constants
-# 
-__settings__ = xbmcplugin
-__language__ = xbmc.getLocalizedString
 
 #
 # Main class

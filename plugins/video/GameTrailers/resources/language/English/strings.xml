@@ -63,5 +63,6 @@
   <string id="30502">Page %u</string>
   <string id="30503">Next page</string>
   <string id="30504">Getting video location...</string>
-  <string id="30505">No media found for:</string>
+  <string id="30505">No video found.</string>
+  <string id="30506">No media found for:</string>
 </strings>
