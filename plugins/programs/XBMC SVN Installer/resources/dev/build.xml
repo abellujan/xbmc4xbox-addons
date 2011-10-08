@@ -4,7 +4,7 @@
 	<!--
 	 * Variables
 	 -->
-	<property name="project.version" value="1.9"/>
+	<property name="project.version" value="2.0 beta"/>
 	
 	<!--
 	 * Package plugin for distribution
