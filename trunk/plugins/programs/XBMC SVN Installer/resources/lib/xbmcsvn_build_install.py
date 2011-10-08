@@ -350,10 +350,12 @@ class Main:
             # (4) Transfer scripts...
             #
             #########################
+            
+            # (A) Q:\scripts...
             old_scripts_path = os.path.join( xbmc.translatePath( "special://home" ), "scripts" )
             new_scripts_path = os.path.join( install_build_path, "scripts" )
 
-            # Check if new scripts folder exists, and create if not..
+            # Create new scripts folder if doesn't exist...
             if not os.path.isdir( new_scripts_path ) :
                 os.mkdir( new_scripts_path )
 
@@ -376,6 +378,31 @@ class Main:
                 # (file) If the file exists, overwrite...
                 else :
                     shutil.copyfile( old_script, new_script )
+                    
+            # (B) Q:\scripts\.modules...
+            old_script_modules_path = os.path.join( old_scripts_path, ".modules" )
+            new_script_modules_path = os.path.join( new_scripts_path, ".modules" )
+            
+            # Create new scripts\.modules folder if doesn't exist...
+            if not os.path.isdir( new_script_modules_path ) :
+                os.mkdir( new_script_modules_path )
+
+            # Analyse old modules...                
+            script_module_entries = os.listdir( old_script_modules_path )
+            
+            # Copy old modules...
+            for script_module_entry in script_module_entries :                
+                # Prepare script copy...
+                old_script_module = os.path.join( old_script_modules_path, script_module_entry )
+                new_script_module = os.path.join( new_script_modules_path, script_module_entry )
+                
+                # Progress bar...
+                dialogProgress.update(60, xbmc.getLocalizedString(30413), old_script_module, new_script_module )
+
+                # (dir) If the new script folder exists, skip (maintained in SVN)...
+                if os.path.isdir( old_script_module ) :
+                    if not os.path.exists( new_script_module ) :
+                        shutil.copytree( old_script_module, new_script_module )            
 
             #########################
             #
