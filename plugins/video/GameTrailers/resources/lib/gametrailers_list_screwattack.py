@@ -40,7 +40,7 @@ class Main:
 		# Get HTML page...
 		#
 		httpCommunicator = HTTPCommunicator()
-		htmlData = httpCommunicator.get( "http://www.gametrailers.com/screwattack/" )
+		htmlData = httpCommunicator.get( "http://www.gametrailers.com/screwattack" )
 					
 		#
 		# Debug
