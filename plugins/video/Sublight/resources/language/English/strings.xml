@@ -76,8 +76,8 @@
    -->
   <string id="30300">Logging in anonymously...</string>
   <string id="30301">Searching for subtitles...</string>
-  <string id="30302">Downloading subtitle(s)...</string>
-  <string id="30303">Downloading subtitle(s) [%s sec]...</string>
+  <string id="30302">Downloading subtitle...</string>
+  <string id="30303">Downloading subtitle in %s second(s)...</string>
   <string id="30304">Logging out...</string>
   <string id="30305">No subtitles found.</string>
   <string id="30306">Subtitle(s) extracted to:</string>
