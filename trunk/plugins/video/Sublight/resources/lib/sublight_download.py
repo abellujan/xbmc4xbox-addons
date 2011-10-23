@@ -73,9 +73,12 @@ class Main :
             #
             # Wait no seconds...
             #
-            if download_wait > 0 :
+            download_wait = int(download_wait)
+            while download_wait > 0 :
                 dp.update( 75, xbmc.getLocalizedString(30303) % download_wait, " ", " " )
-                time.sleep(float(download_wait))
+                time.sleep(1)
+                download_wait = download_wait -1
+            dp.update( 75, xbmc.getLocalizedString(30302), " ", " " )
             
             #
             # Download subtitle...

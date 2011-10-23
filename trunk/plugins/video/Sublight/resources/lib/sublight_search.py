@@ -33,13 +33,25 @@ class Main :
         # Browse for movie file...
         #
         else :
-            browse = xbmcgui.Dialog()
-            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mp4|.mpg|.mpeg|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.mkv|.ogm")
+            # Get last location (get up one level if path doesn't exist anymore)...
+            lastMoviePath = xbmcplugin.getSetting ("lastMoviePath")
+            while lastMoviePath != ""   and         \
+                  lastMoviePath != "\\" and         \
+                  not os.path.exists(lastMoviePath) :
+                lastMoviePath = os.path.dirname(lastMoviePath)
             
-            # No file selected...
-            if movieFullPath == "" :
+            # Browse dialog...
+            browse = xbmcgui.Dialog()
+            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mp4|.mpg|.mpeg|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.mkv|.ogm", False, False, lastMoviePath)
+            
+            # No file selected (exit)...
+            if not os.path.isfile(movieFullPath) :
                 xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
                 return
+
+            # Save last location...
+            lastMoviePath = os.path.join(os.path.dirname(movieFullPath), "")
+            xbmcplugin.setSetting("lastMoviePath", lastMoviePath)
 
         # Split in dir and filename...
         movie_dir  = os.path.dirname  (movieFullPath)
