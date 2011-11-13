@@ -3,6 +3,8 @@ http://www.gamespot.com/
 
 Changelog:
 ~~~~~~~~~~
+v1.3 (Sunday, 13 November 2011):
+ - website changes;
 
 v1.2 (Friday, 24 December 2010):
  - error parsing some XML replies (missing XML declaration / encoding);

@@ -3,7 +3,7 @@
 # GameSpot - XBMC video plugin
 # http://www.gamespot.com/videos/
 #
-# Version 1.2
+# Version 1.3
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -23,8 +23,8 @@
 __plugin__  = "GameSpot Videos"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "24 December 2010"
-__version__ = "1.2"
+__date__    = "13 November 2011"
+__version__ = "1.3"
 
 #
 # Imports
