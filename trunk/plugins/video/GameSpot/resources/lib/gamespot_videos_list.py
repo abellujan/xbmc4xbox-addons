@@ -11,6 +11,13 @@ import datetime
 import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
+from gamespot_videos_utils import HTTPCommunicator
+
+#
+# Constants
+# 
+__settings__ = xbmcplugin
+__language__ = xbmc.getLocalizedString
 
 #
 # Main class
@@ -31,7 +38,7 @@ class Main:
 
 		# Settings
 		self.page_size       = 20
-		self.video_quality   = xbmcplugin.getSetting ("video_quality")
+		self.video_quality   = __settings__.getSetting ("video_quality")
 
 		# Get page...
 		self.current_page    = int ( params.get( "page", "0" ) )
@@ -52,11 +59,10 @@ class Main:
 		
 		#
 		# Get HTML page...
-		#		
-		url = "http://www.gamespot.com/videos/index.html?mode=filter&page=%u&type=%s&range=all&view=list&filter=latest" % ( self.current_page, self.video_type )
-		usock = urllib.urlopen( url )
-		htmlSource = usock.read()
-		usock.close()
+		#
+		httpCommunicator = HTTPCommunicator()
+		url              = "http://www.gamespot.com/videos/index.html?mode=filter&page=%u&type=%s&range=all&view=list&filter=latest" % ( self.current_page, self.video_type )
+		htmlSource       = httpCommunicator.get( url )
 		
 		# Debug
 		if (self.DEBUG) :
@@ -128,14 +134,11 @@ class Main:
 		
 		# Next page entry...
 		if (self.current_page + 1 < total_pages) :
-			listitem = xbmcgui.ListItem (xbmc.getLocalizedString(30402), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+			listitem = xbmcgui.ListItem (__language__(30402), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 			xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list&plugin_category=%s&video_type=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.video_type, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
-		
-		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + xbmc.getLocalizedString(30401) + ")" ) % (self.plugin_category, self.current_page + 1, total_pages) )
-		
+				
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )

@@ -2,6 +2,7 @@
 # Imports
 #
 import os
+import re
 import sys
 import xbmc
 import xbmcgui
@@ -29,7 +30,8 @@ class Main:
 		#
 		# Constants
 		#
-		self.DEBUG = False
+		self.VIDEO_PAGE_URL2 = re.compile( ".*/video/(\d+)/.*" )
+		self.VIDEO_PAGE_URL3 = re.compile( ".*/video[s]?/.*-(\d+)" )
 		
 		#
 		# Parse parameters...
@@ -54,9 +56,6 @@ class Main:
 	# Play video...
 	#
 	def playVideo( self ) :
-		if (self.DEBUG) :
-			print "video_page_url = " + self.video_page_url
-
 		#
 		# Get current list item details...
 		#
@@ -70,7 +69,7 @@ class Main:
 		# Show wait dialog while parsing data...
 		#
 		dialogWait = xbmcgui.DialogProgress()
-		dialogWait.create( __language__(30403), title )			
+		dialogWait.create( __language__(30403), title )
 		
 		# 
 		# Case 1: The id is part of the query (id=xyz) 
@@ -83,14 +82,17 @@ class Main:
 			video_url = "http://userimage.gamespot.com/cgi/deliver_user_video.php?id=%s" % ( video_id )
 			
 		#
-		# Case 2: The id is part of the URL (id=1234567)
-		# e.g. /ps3/action/killzone2/video/6205378/killzone-2-video-review
+		# Other
 		#
 		else :
-			url_dict = self.video_page_url.split( "/" )
-			if len( url_dict ) > 2 :
-				video_id   = int( url_dict[ len(url_dict) - 2 ] )
-
+			video_id = None
+			
+			if (self.VIDEO_PAGE_URL2.match( self.video_page_url )) :
+				video_id = self.VIDEO_PAGE_URL2.search( self.video_page_url ).group(1)
+			if (self.VIDEO_PAGE_URL3.match( self.video_page_url )) :
+				video_id = self.VIDEO_PAGE_URL3.search( self.video_page_url ).group(1)
+			
+			if video_id != None :
 				#
 				# Call xml.php to get the address to the .FLV movie...
 				#
@@ -100,13 +102,7 @@ class Main:
 				
 				# Add the xml declaration + character encoding (missing)...
 				xmlData = "<?xml version=\"1.0\" encoding=\"iso8859-1\" ?>" + os.linesep + xmlData
-		
-				# Debug
-				if (self.DEBUG) :
-					f = open(os.path.join( xbmc.translatePath( "special://profile" ), "plugin_data", "video", sys.modules[ "__main__" ].__plugin__, "xml_php_reply.xml"), 'w')
-					f.write( xmldoc.toxml() )
-					f.close()
-		
+
 				# Parse the response...
 				xmldoc      = minidom.parseString( xmlData )
 
@@ -126,9 +122,6 @@ class Main:
 		#	
 		# Play video...
 		#
-		if (self.DEBUG) :
-			print "Playing : " + video_url
-		
 		playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
 		playlist.clear()
 
