@@ -3,7 +3,7 @@
 #
 from BeautifulSoup import BeautifulStoneSoup, SoupStrainer
 from eurogamer_const import __settings__, __language__
-from eurogamer_tv_utils import HTTPCommunicator
+from eurogamer_utils import HTTPCommunicator
 import os
 import re
 import sys
