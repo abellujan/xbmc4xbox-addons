@@ -23,7 +23,7 @@
     <title>Eurogamer</title>
 
     <!-- (required) Major.minor.build -->
-    <version>1.4</version>
+    <version>1.5</version>
 
     <!-- (required) author name & email.  at least one author name is required -->
     <authors>
