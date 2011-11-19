@@ -3,7 +3,7 @@
   <!--
    * Main
    -->
-  <string id="30000">Eurogamer TV</string>
+  <string id="30000">Eurogamer</string>
   <string id="30001">All</string>
   <string id="30002">Trailers</string>
   <string id="30003">Gameplay</string>
@@ -30,4 +30,5 @@
    -->
   <string id="30401">Next page</string>
   <string id="30402">Getting video location...</string>
+  <string id="30403">No video found.</string>
 </strings>

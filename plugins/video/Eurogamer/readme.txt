@@ -4,6 +4,9 @@ http://www.eurogamer.net/
 Changelog:
 ~~~~~~~~~
 
+v1.5:
+ - website changes;
+
 v1.4:
  - website changes;
 

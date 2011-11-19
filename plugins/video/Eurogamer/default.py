@@ -1,9 +1,9 @@
 ##############################################################################
 #
-# Eurogamer - XBMC video plugin
+# Eurogamer - XBMC video addon
 # http://www.eurogamer.net/
 #
-# Version 1.4
+# Version 1.5
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -19,11 +19,11 @@
 # 
 # Constants
 #
-__plugin__  = "Eurogamer TV"
+__plugin__  = "Eurogamer"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "4 June 2010"
-__version__ = "1.4"
+__date__    = "19 November 2011"
+__version__ = "1.5"
 
 #
 # Imports
@@ -37,12 +37,10 @@ sys.path.append (LIB_DIR)
 #
 # Main block
 #
-if ( "action=list" in sys.argv[ 2 ] ):
-    import eurogamer_tv_list as plugin
-elif ( "action=play" in sys.argv[ 2 ] ):
-    import eurogamer_tv_play as plugin
+if ( "action=play" in sys.argv[ 2 ] ):
+    import eurogamer_play as plugin
 else :
     xbmc.log( "[PLUGIN] %s v%s (%s)" % ( __plugin__, __version__, __date__ ), xbmc.LOGNOTICE )
-    import eurogamer_tv_main as plugin
+    import eurogamer_list as plugin
 
 plugin.Main()
