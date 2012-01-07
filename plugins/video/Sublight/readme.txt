@@ -1,6 +1,6 @@
 Sublight
 ~~~~~~~~
- v1.9 beta 2 (Sunday, 23 October 2011):
+ v1.9 (Friday, 6 January 2012):
   - allow browsing for .mp4 files;
   - improved file name cleanup;
   - active download wait counter;
