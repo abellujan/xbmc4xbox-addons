@@ -1,9 +1,9 @@
 ##############################################################################
 #
 # Sublight - XBMC video plugin
-# http://www.subtitles-on.net/
+# http://www.sublight.si/
 #
-# Version 1.9 beta 2
+# Version 1.9
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -20,8 +20,8 @@
 __plugin__  = "Sublight"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "23 October 2011"
-__version__ = "1.9 beta "
+__date__    = "6 January 2012"
+__version__ = "1.9"
 
 #
 # Imports
