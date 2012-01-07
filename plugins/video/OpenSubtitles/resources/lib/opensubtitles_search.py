@@ -47,13 +47,25 @@ class Main:
         # Browse for movie file (when not playing)...
         #
         if movieFullPath == "" :
+            # Get last location (go up one level if path doesn't exist anymore)...
+            lastMoviePath = xbmcplugin.getSetting ("lastMoviePath")
+            while lastMoviePath != ""   and         \
+                  lastMoviePath != "\\" and         \
+                  not os.path.exists(lastMoviePath) :
+                lastMoviePath = os.path.dirname(lastMoviePath)
+            
+            # Browse...
             browse = xbmcgui.Dialog()
-            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mpg|.mpeg|.mp4|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.m2ts|.mkv|.ogm")
+            movieFullPath = browse.browse(1, xbmc.getLocalizedString(30200), "video", ".avi|.mpg|.mpeg|.mp4|.wmv|.asf|.divx|.mov|.m2p|.moov|.omf|.qt|.rm|.vob|.dat|.dv|.3ivx|.m2ts|.mkv|.ogm", False, False, lastMoviePath)
         
-            # No file selected...
-            if movieFullPath == "" :
+            # No file selected (exit)...
+            if not os.path.isfile(movieFullPath) :
                 xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
                 return
+            
+            # Save last location...
+            lastMoviePath = os.path.join(os.path.dirname(movieFullPath), "")
+            xbmcplugin.setSetting("lastMoviePath", lastMoviePath)            
         
         #
         # Languages (prepare filter)...
@@ -89,21 +101,22 @@ class Main:
             
             server = xmlrpclib.Server( "http://api.opensubtitles.org/xml-rpc", verbose=0 )
             #print server.ServerInfo()        
-            login  = server.LogIn("", "", "en", "XBMC OpenSubtitles Plugin v1.2")
+            login  = server.LogIn("", "", "en", "XBMC OpenSubtitles Plugin v1.5")
             
             status = login[ "status" ]
             token  = login[ "token"  ]
             
             if status != "200 OK" :
                 errorDialog = xbmcgui.Dialog()
-                errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), xbmc.getLocalizedString(30205) )
+                errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), status, xbmc.getLocalizedString(30205) )
                 del errorDialog
                 
                 xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
                 return
+
         except Exception, e:
             errorDialog = xbmcgui.Dialog()
-            errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), xbmc.getLocalizedString(30205) )
+            errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), str(e) )
             del errorDialog
             
             xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
@@ -113,7 +126,7 @@ class Main:
         # Searching...
         #
         try :
-            dialogProgress.update( 50, xbmc.getLocalizedString(30202), movie_file, "" )            
+            dialogProgress.update( 50, xbmc.getLocalizedString(30202), movie_file, "" )
 
             # Language #1
             searchArray = []
@@ -136,9 +149,9 @@ class Main:
             # Search...
             resultData = server.SearchSubtitles( token, searchArray )
                 
-        except :
+        except Exception, e:
             errorDialog = xbmcgui.Dialog()
-            errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), xbmc.getLocalizedString(30205) )
+            errorDialog.ok("OpenSubtitles", xbmc.getLocalizedString(30204), str(e) )
             del errorDialog
 
             xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )

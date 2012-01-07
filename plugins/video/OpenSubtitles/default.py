@@ -3,7 +3,7 @@
 # OpenSubtitles - XBMC "video" plugin
 # http://www.opensubtitles.org
 #
-# Version 1.5 beta
+# Version 1.5
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -20,8 +20,8 @@
 __plugin__  = "OpenSubtitles"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "6 August 2011"
-__version__ = "1.5 beta"
+__date__    = "6 January 2012"
+__version__ = "1.5"
 
 #
 # Imports
