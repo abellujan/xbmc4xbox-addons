@@ -23,7 +23,7 @@
 __plugin__  = "XBMC SVN Installer"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "16 July 2011"
+__date__    = "08 October 2011"
 __version__ = "2.0 beta"
 
 #
