@@ -12,6 +12,7 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import xml.sax.saxutils
+import unicodedata
 
 #
 # Main class
@@ -55,7 +56,7 @@ class Main:
 		#
 		# Get HTML page...
 		#
-		url              = "http://www.eurogamer.net/ajax.php?action=frontpage&page=%i" % (self.current_page )
+		url              = "http://www.eurogamer.net/ajax.php?action=frontpage&page=%i&type=video" % (self.current_page )
 		httpCommunicator = HTTPCommunicator()
 		htmlSource       = httpCommunicator.get( url )
 				
@@ -68,34 +69,59 @@ class Main:
 		# Loop through "playlist" divs...
 		uls = beautifulSoup.findAll( "ul", recursive = False )
 		for ul in uls:
+		
+			# skip popular now and popular recently as they will be found at thry normal (chronological position)
+			ul_id = ul.get( "id" )
+			if ul_id != None and ( ul_id == "popular-now" or ul_id == "popular-recently" ) :
+				continue
+			
 			lis = ul.findAll( "li", recursive=False )
 			for li in lis :
 				# Get A link...
 				li_a = li.find("a", recursive=False)				
-				if (li_a == None) :
+
+				# Video page URL
+				video_page_url = None
+				div_a = li.find( "div", recursive=False )
+				if div_a != None :
+					h2_a = div_a.find ( "h2", recursive=False )
+					if h2_a != None :
+						a_a = h2_a.find ( "a", recursive=False)
+						if a_a != None :
+							video_page_url = a_a[ "href" ]
+							
+				if (video_page_url == None) :
 					continue
 				
-				# Video page URL...
-				video_page_url = li_a[ "href" ]			
-				
 				# Thumbnail...
-				a_style   = li_a[ "style" ]
 				thumbnail = "";
-				if (self.THUMBNAIL_RE.match(a_style)) :
-					thumbnail = self.THUMBNAIL_RE.search(a_style).group(1) 
+				if (li_a != None) :
+					a_style   = li_a[ "style" ]
+					if (self.THUMBNAIL_RE.match(a_style)) :
+						thumbnail = self.THUMBNAIL_RE.search(a_style).group(1) 
 				
 				# Title
 				title = li.div.h2.a.string.strip()
+				# Normalize unicode cause we can find funny accents and they are not properly unicode encoded
+				# so we just transform into their ascii equivalent
+				title = unicodedata.normalize('NFKD', title).encode("ascii", "ignore")
 				
 				# Plot
 				plot = ""
+				p_p = div_a.find ( "p", recursive=False )
+				if p_p != None :
+					p_plot = p_p.contents[0]
+					if ( p_plot != None ) :
+						plot = p_plot.strip()
+						plot = unicodedata.normalize('NFKD', plot).encode("ascii", "ignore")
 				
 				play_script_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
-	
+
 				# Add directory entry...
 				listitem = xbmcgui.ListItem( title, iconImage=thumbnail, thumbnailImage=thumbnail )
 				listitem.setInfo( "video", { "Title" : title, "Studio" : "Eurogamer", "Plot" : plot } )
 				xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=play_script_url, listitem=listitem, isFolder=False)
+				
 
 		# Next page...
 		listitem = xbmcgui.ListItem (__language__(30401), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
