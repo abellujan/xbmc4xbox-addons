@@ -29,7 +29,8 @@ class Main:
 		self.video_players = { "0" : xbmc.PLAYER_CORE_AUTO,
 							   "1" : xbmc.PLAYER_CORE_DVDPLAYER,
 							   "2" : xbmc.PLAYER_CORE_MPLAYER }
-		self.video_player = __settings__.getSetting ("video_player")
+		self.video_player  = __settings__.getSetting("video_player")
+		self.video_quality = __settings__.getSetting("video_quality")
 		
 		# Play video...
 		self.playVideo()
@@ -82,6 +83,10 @@ class Main:
 			
 			json = simplejson.loads( jsonReply )
 			video_url = json[0][ 'file' ]
+			if self.video_quality == "1" :
+				video_url_hd = json[0].get( 'hd.file' )
+				if video_url_hd != None :
+					video_url = video_url_hd
 
 		#
 		# Close wait dialog...

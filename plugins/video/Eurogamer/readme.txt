@@ -4,6 +4,11 @@ http://www.eurogamer.net/
 Changelog:
 ~~~~~~~~~
 
+v1.6:
+   Thanks to Xal Xolarian for code changes:
+ - take information from video stream (http://www.eurogamer.net/?type=video);
+ - take HD/SD setting into account.
+
 v1.5:
  - website changes;
 
