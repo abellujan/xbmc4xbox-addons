@@ -3,7 +3,7 @@
 # Eurogamer - XBMC video addon
 # http://www.eurogamer.net/
 #
-# Version 1.6
+# Version 1.7
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -23,7 +23,7 @@ __plugin__  = "Eurogamer"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
 __date__    = "11 March 2012"
-__version__ = "1.6"
+__version__ = "1.7"
 
 #
 # Imports
@@ -37,10 +37,16 @@ sys.path.append (LIB_DIR)
 #
 # Main block
 #
-if ( "action=play" in sys.argv[ 2 ] ):
+if ( "action=list" in sys.argv[ 2 ] ):
+    import eurogamer_list as plugin
+elif ( "action=play" in sys.argv[ 2 ] ):
     import eurogamer_play as plugin
+elif ( "action=main-search" in sys.argv[ 2 ] ):
+    import eurogamer_main_search as plugin
+elif ( "action=search-list" in sys.argv[ 2 ] ):
+    import eurogamer_list_search as plugin
 else :
     xbmc.log( "[PLUGIN] %s v%s (%s)" % ( __plugin__, __version__, __date__ ), xbmc.LOGNOTICE )
-    import eurogamer_list as plugin
+    import eurogamer_main as plugin
 
 plugin.Main()

@@ -33,6 +33,8 @@ class Main:
 		#
 		if sys.argv[ 2 ][ 1: ] != "" :
 			params = dict(part.split('=') for part in sys.argv[ 2 ][ 1: ].split('&'))
+			self.channel = params[ 'channel' ]
+			self.channel_desc = params[ 'channel_desc' ]
 		else :
 			params = dict()
 
@@ -57,9 +59,16 @@ class Main:
 		# Get HTML page...
 		#
 		url              = "http://www.eurogamer.net/ajax.php?action=frontpage&page=%i&type=video" % (self.current_page )
+		if self.channel == "show" :
+			url			 = "http://www.eurogamer.net/ajax.php?action=frontpage&page=%i&topic=egtv-show" % (self.current_page )
 		httpCommunicator = HTTPCommunicator()
 		htmlSource       = httpCommunicator.get( url )
-				
+		
+		#
+		# Tells us if we have items (so we can display/or not the Next Page)
+		#
+		self.items = False
+		
 		#
 		# Parse HTML page...
 		#
@@ -70,10 +79,17 @@ class Main:
 		uls = beautifulSoup.findAll( "ul", recursive = False )
 		for ul in uls:
 		
-			# skip popular now and popular recently as they will be found at thry normal (chronological position)
+			# skip popular now and popular recently as they will be found at they normal (chronological) position
 			ul_id = ul.get( "id" )
-			if ul_id != None and ( ul_id == "popular-now" or ul_id == "popular-recently" ) :
-				continue
+			if self.channel == "now" :
+				if ul_id != "popular-now" :
+					continue
+			elif self.channel == "recently" :
+				if ul_id != "popular-recently" :
+					continue
+			else:
+				if ul_id != None and ( ul_id == "popular-now" or ul_id == "popular-recently" ) :
+					continue
 			
 			lis = ul.findAll( "li", recursive=False )
 			for li in lis :
@@ -98,7 +114,8 @@ class Main:
 				if (li_a != None) :
 					a_style   = li_a[ "style" ]
 					if (self.THUMBNAIL_RE.match(a_style)) :
-						thumbnail = self.THUMBNAIL_RE.search(a_style).group(1) 
+						thumbnail = self.THUMBNAIL_RE.search(a_style).group(1)
+						thumbnail = thumbnail.replace("/mirroredfloor/1", "") 
 				
 				# Title
 				title = li.div.h2.a.string.strip()
@@ -116,7 +133,9 @@ class Main:
 						plot = unicodedata.normalize('NFKD', plot).encode("ascii", "ignore")
 				
 				play_script_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
-
+				
+				# Notify to show Next Page
+				self.items = True
 				# Add directory entry...
 				listitem = xbmcgui.ListItem( title, iconImage=thumbnail, thumbnailImage=thumbnail )
 				listitem.setInfo( "video", { "Title" : title, "Studio" : "Eurogamer", "Plot" : plot } )
@@ -124,8 +143,9 @@ class Main:
 				
 
 		# Next page...
-		listitem = xbmcgui.ListItem (__language__(30401), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
-		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list&page=%i" % ( sys.argv[0], self.current_page + 1 ), listitem = listitem, isFolder = True)
+		if self.items and self.channel != "now" and self.channel != "recently" :
+			listitem = xbmcgui.ListItem (__language__(30401), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+			xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list&channel=%s&channel_desc=%s&page=%i" % ( sys.argv[0], self.channel, self.channel_desc, self.current_page + 1 ), listitem = listitem, isFolder = True)
 			
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
