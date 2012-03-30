@@ -4,8 +4,14 @@ http://www.eurogamer.net/
 Changelog:
 ~~~~~~~~~
 
+v1.7:
+   Thanks to Xal Xolarian:
+ - add categories "Popular Now", "Recently Popular", "EGTV Show" and "Search"
+ - search only searches through video
+ - fixed a problem that when a video has only hd version it was not played
+ 
 v1.6:
-   Thanks to Xal Xolarian for code changes:
+   Thanks to Xal Xolarian:
  - take information from video stream (http://www.eurogamer.net/?type=video);
  - take HD/SD setting into account.
 

@@ -8,6 +8,11 @@
   <string id="30002">Trailers</string>
   <string id="30003">Gameplay</string>
   <string id="30004">EGTV Show</string>
+  <string id="30005">Videos</string>
+  <string id="30006">Popular Now</string>
+  <string id="30007">Recently Popular</string>
+  <string id="30008">Search</string>
+  <string id="30009">Search media...</string>
 
   <!-- 
    * Settings labels 
@@ -31,4 +36,5 @@
   <string id="30401">Next page</string>
   <string id="30402">Getting video location...</string>
   <string id="30403">No video found.</string>
+  <string id="30404">No media found for:</string>
 </strings>

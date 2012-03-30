@@ -85,7 +85,7 @@ class Main:
 			video_url = json[0][ 'file' ]
 			if self.video_quality == "1" :
 				video_url_hd = json[0].get( 'hd.file' )
-				if video_url_hd != None :
+				if video_url_hd != None and video_url_hd != "":
 					video_url = video_url_hd
 
 		#
