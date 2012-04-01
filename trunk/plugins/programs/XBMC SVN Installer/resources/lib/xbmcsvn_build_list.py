@@ -47,7 +47,7 @@ class Main:
         os_platform   = os.environ.get("OS")
 
         # Xbox only (anyways)
-        rss_url = "http://www.xbmcsvn.com/?mode=RSS&a=XBOX"            
+        rss_url = "http://sshcs.com/xbmc/?mode=RSS&a=XBOX"            
         
         #
         # Get RSS feed...
