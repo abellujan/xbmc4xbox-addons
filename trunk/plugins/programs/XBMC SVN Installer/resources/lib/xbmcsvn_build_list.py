@@ -150,35 +150,37 @@ class Main:
     # Convert HTML to readable strings...
     #
     def parseDescription ( self, description ):
-        xmlString = description[description.find("<log>") : description.find("</log>") + 6 ]
-        xmlDom    = minidom.parseString( xmlString )
-        
-        text = ""
-        for node in xmlDom.getElementsByTagName("logentry") :
-            revision = node.attributes[ "revision" ].value
-            author   = ""
-            date     = ""
-            msg      = ""
+        description = ""
+
+        xmlString = description[description.find("<log>") : description.find("</log>") + 6 ]		
+        if xmlString != "" :
+            xmlDom    = minidom.parseString( xmlString )
             
-            for childNode in node.childNodes:
-                if childNode.nodeName == "author" :
-                    author = childNode.firstChild.data
-                elif childNode.nodeName == "date" :
-                    date   = childNode.firstChild.data
-                elif childNode.nodeName == "msg" :
-                    msg   = childNode.firstChild.data.strip()
-            
-            # Date display...
-            date          = date[ : date.find(".") ]
-            date_elements = time.strptime(date, "%Y-%m-%dT%H:%M:%S")
-            date_format   = xbmc.getRegion( "datelong" ).replace( "DDDD", "%a" ).replace( "D", "%d" ).replace( "MMMM", "%b" ).replace("YYYY", "%Y").strip()
-            date_display  = datetime.date( date_elements[0], date_elements[1], date_elements[2] ).strftime( date_format )
-            
-             
-            # Add change entry...
-            text = text + "Revision %s - %s\n"                  % ( revision, msg )
-            text = text + "%s - [COLOR=FFe2ff43]%s[/COLOR]\n\n" % ( date_display, author )
+            for node in xmlDom.getElementsByTagName("logentry") :
+                revision = node.attributes[ "revision" ].value
+                author   = ""
+                date     = ""
+                msg      = ""
+                
+                for childNode in node.childNodes:
+                    if childNode.nodeName == "author" :
+                        author = childNode.firstChild.data
+                    elif childNode.nodeName == "date" :
+                        date   = childNode.firstChild.data
+                    elif childNode.nodeName == "msg" :
+                        msg   = childNode.firstChild.data.strip()
+                
+                # Date display...
+                date          = date[ : date.find(".") ]
+                date_elements = time.strptime(date, "%Y-%m-%dT%H:%M:%S")
+                date_format   = xbmc.getRegion( "datelong" ).replace( "DDDD", "%a" ).replace( "D", "%d" ).replace( "MMMM", "%b" ).replace("YYYY", "%Y").strip()
+                date_display  = datetime.date( date_elements[0], date_elements[1], date_elements[2] ).strftime( date_format )
+                
+                 
+                # Add change entry...
+                description = description + "Revision %s - %s\n"                  % ( revision, msg )
+                description = description + "%s - [COLOR=FFe2ff43]%s[/COLOR]\n\n" % ( date_display, author )
 
         # Return value            
-        return text
+        return description
 
