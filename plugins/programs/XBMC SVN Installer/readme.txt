@@ -1,7 +1,7 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
-v2.0 beta (Saturday, 08 October 2011)
+v2.0 (Thursday, 7 June 2012)
  - [Xbox] upgrade - copy Q:\scripts\.modules correctly (thanks to VanZan & whufclee);
 
 v1.9 (Tuesday, 23 August 2011)
