@@ -3,7 +3,7 @@
 # Eurogamer - XBMC video addon
 # http://www.eurogamer.net/
 #
-# Version 1.7
+# Version 1.8
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -22,8 +22,8 @@
 __plugin__  = "Eurogamer"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "11 March 2012"
-__version__ = "1.7"
+__date__    = "1 July 2012"
+__version__ = "1.8"
 
 #
 # Imports
