@@ -26,7 +26,6 @@ class Main:
 		# Constants
 		#
 		self.IMAGES_PATH  = xbmc.translatePath( os.path.join( os.getcwd(), 'resources', 'images' ) )
-		self.THUMBNAIL_RE = re.compile( "background-image: url\((.*)\)" ) 
 		
 		#
 		# Parse parameters...
@@ -111,11 +110,9 @@ class Main:
 				
 				# Thumbnail...
 				thumbnail = "";
-				if (li_a != None) :
-					a_style   = li_a[ "style" ]
-					if (self.THUMBNAIL_RE.match(a_style)) :
-						thumbnail = self.THUMBNAIL_RE.search(a_style).group(1)
-						thumbnail = thumbnail.replace("/mirroredfloor/1", "") 
+				img_a = li.find( "img" )
+				if img_a != None:
+					thumbnail = img_a["src"]
 				
 				# Title
 				title = li.div.h2.a.string.strip()

@@ -72,8 +72,9 @@ class Main:
 		#
 		# Get all the videos found
 		# 
-		lis = beautifulSoup.findAll( "li", { "class" : "article video" } )
-				# No results found...
+		lis = beautifulSoup.findAll( "li", { "class" : "article medium" } )
+		
+		# No results found...
 		if len(lis) == 0 :
 			xbmcgui.Dialog().ok( __language__(30008), __language__(30404), self.query )
 			xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=False )
@@ -83,7 +84,7 @@ class Main:
 			
 			# video page url
 			video_page_url = None
-			h2_a = li.find( "h2", recursive=False )
+			h2_a = li.find( "h2" )
 			if h2_a != None :
 				a = h2_a.find ( "a", recursive=False )
 				if a != None:
@@ -116,9 +117,7 @@ class Main:
 				
 			# Plot
 			plot = ""
-			span_p = li.find ("span", {"class":"time"})
-			
-			plot_p = span_p.nextSibling
+			plot_p = li.find ("p")
 			if plot_p != None and plot_p.string != None:
 				plot = plot_p.string.strip()
 				plot = unicodedata.normalize('NFKD', plot).encode("ascii", "ignore")

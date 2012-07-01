@@ -4,6 +4,10 @@ http://www.eurogamer.net/
 Changelog:
 ~~~~~~~~~
 
+v.18:
+   Thanks to Xal Xolarian:
+ - website changes;
+
 v1.7:
    Thanks to Xal Xolarian:
  - add categories "Popular Now", "Recently Popular", "EGTV Show" and "Search"
