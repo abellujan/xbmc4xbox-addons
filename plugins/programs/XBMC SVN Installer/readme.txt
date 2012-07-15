@@ -1,6 +1,9 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
+v2.1 (Sunday, 15 July 2012)
+ - Nightly builds location: http://www.xbmc4xbox.org.uk/nightly/
+
 v2.0 (Thursday, 7 June 2012)
  - [Xbox] upgrade - copy Q:\scripts\.modules correctly (thanks to VanZan & whufclee);
 
