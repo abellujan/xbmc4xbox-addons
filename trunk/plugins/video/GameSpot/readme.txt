@@ -3,6 +3,9 @@ http://www.gamespot.com/
 
 Changelog:
 ~~~~~~~~~~
+v1.4 (Saturday, 18 August 2012):
+ - website changes;
+ 
 v1.3 (Sunday, 13 November 2011):
  - website changes;
 

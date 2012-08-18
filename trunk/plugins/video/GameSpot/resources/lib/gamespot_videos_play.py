@@ -46,6 +46,15 @@ class Main:
 							   "1" : xbmc.PLAYER_CORE_DVDPLAYER,
 							   "2" : xbmc.PLAYER_CORE_MPLAYER }
 		self.video_player = xbmcplugin.getSetting ("video_player")
+		
+		#
+		# Get current item details...
+		#
+		self.video_title     = unicode( xbmc.getInfoLabel( "ListItem.Title"  ), "utf-8" )
+		self.video_thumbnail =          xbmc.getInfoImage( "ListItem.Thumb"  )
+		self.video_studio    = unicode( xbmc.getInfoLabel( "ListItem.Studio" ), "utf-8" )
+		self.video_plot      = unicode( xbmc.getInfoLabel( "ListItem.Plot"   ), "utf-8" )
+		self.video_genre     = unicode( xbmc.getInfoLabel( "ListItem.Genre"  ), "utf-8" )
 
 		#
 		# Play video...
@@ -57,30 +66,53 @@ class Main:
 	#
 	def playVideo( self ) :
 		#
-		# Get current list item details...
-		#
-		title     = unicode( xbmc.getInfoLabel( "ListItem.Title"  ), "utf-8" )
-		thumbnail =          xbmc.getInfoImage( "ListItem.Thumb"  )
-		studio    = unicode( xbmc.getInfoLabel( "ListItem.Studio" ), "utf-8" )
-		plot      = unicode( xbmc.getInfoLabel( "ListItem.Plot"   ), "utf-8" )
-		genre     = unicode( xbmc.getInfoLabel( "ListItem.Genre"  ), "utf-8" )
-		
-		#
 		# Show wait dialog while parsing data...
 		#
 		dialogWait = xbmcgui.DialogProgress()
-		dialogWait.create( __language__(30403), title )
+		dialogWait.create( __language__(30403), self.video_title )
 		
 		# 
 		# Case 1: The id is part of the query (id=xyz) 
 		# e.g. http://www.gamespot.com/xbox360/action/wanted/video_player.html?id=cSEynjOr5bIIvzTZ
 		#
 		if ("?id=" in self.video_page_url) :
-			parsed     = urlparse(self.video_page_url)
-			params     = dict(part.split('=') for part in parsed[4].split('&'))
-			video_id   = params[ "id" ]
+			parsed    = urlparse(self.video_page_url)
+			params    = dict(part.split('=') for part in parsed[4].split('&'))
+			video_id  = params[ "id" ]
 			video_url = "http://userimage.gamespot.com/cgi/deliver_user_video.php?id=%s" % ( video_id )
+		#
+		# Case 2: The id is part of the query (?sid=xyz)
+		# e.g. http://uk.gamespot.com/events/gamescom-2012/video.html?sid=6392231
+		#
+		elif ("?sid=" in self.video_page_url) :
+			parsed    = urlparse(self.video_page_url)
+			params    = dict(part.split('=') for part in parsed[4].split('&'))
+			video_id  = params[ "sid" ]
 			
+			if video_id != None :
+				#
+				# Call xml.php to get the address to the .FLV movie...
+				#
+				httpCommunicator = HTTPCommunicator()
+				xml_php_url = "http://www.gamespot.com/pages/video_player/xml.php?id=%s" % str( video_id )
+				xmlData     = httpCommunicator.get( xml_php_url )
+				
+				# Add the xml declaration + character encoding (missing)...
+				xmlData = "<?xml version=\"1.0\" encoding=\"iso8859-1\" ?>" + os.linesep + xmlData
+
+				# Parse the response...
+				xmldoc      = minidom.parseString( xmlData )
+
+				# Get the HTTP url...
+				playlistNode = xmldoc.documentElement.getElementsByTagName( "playList" )[0]
+				clipNode     = playlistNode.getElementsByTagName( "clip" )[0]
+				uriNode      = clipNode.getElementsByTagName( "URI" )[0]
+				
+				# SD or HD...
+				video_url = uriNode.childNodes[0].nodeValue
+				
+				# cleanup
+				xmldoc.unlink()
 		#
 		# Other
 		#
@@ -117,7 +149,7 @@ class Main:
 					video_url = video_url.replace( "_400.flv", "_1400.flv" )
 				
 				# cleanup
-				playlistNode.unlink()			
+				playlistNode.unlink()
 
 		#	
 		# Play video...
@@ -125,12 +157,10 @@ class Main:
 		playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
 		playlist.clear()
 
-		# set the default icon
-		icon = "DefaultVideo.png"
 		# only need to add label, icon and thumbnail, setInfo() and addSortMethod() takes care of label2
-		listitem = xbmcgui.ListItem( title, iconImage=icon, thumbnailImage=thumbnail )
+		listitem = xbmcgui.ListItem( self.video_title, iconImage="DefaultVideo.png", thumbnailImage=self.video_thumbnail )
 		# set the key information
-		listitem.setInfo( "video", { "Title": title, "Studio" : studio, "Plot" : plot, "Genre" : genre } )
+		listitem.setInfo( "video", { "Title": self.video_title, "Studio" : self.video_studio, "Plot" : self.video_plot, "Genre" : self.video_genre } )
 		# add item to our playlist
 		playlist.add( video_url, listitem )
 
