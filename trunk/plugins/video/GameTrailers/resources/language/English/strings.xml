@@ -10,7 +10,7 @@
   <string id="30004">Top Media</string>
   <string id="30005">Gameplay</string>
   <string id="30006">Platforms</string>
-  <string id="30007">Channels</string>
+  <string id="30007">Shows</string>
   <string id="30008">Search</string>
   <string id="30009">Search media...</string>
 
@@ -25,15 +25,16 @@
   <string id="30068">Mobile</string>
   
   <!-- 
-   * Channels 
+   * Shows 
    -->
-  <string id="30070">GTTV</string>
+  <string id="30070">GT.TV</string>
   <string id="30071">Bonus Round</string>
   <string id="30072">Retrospectives</string>
   <string id="30073">ScrewAttack</string>
   <string id="30074">Video Game Vault</string>
   <string id="30075">Top Ten</string>
   <string id="30076">Angry Video Game Nerd</string>
+  <string id="30077">Pach-Attack!</string>
   
   <!-- 
    * Settings labels 

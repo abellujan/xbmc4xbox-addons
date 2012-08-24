@@ -3,7 +3,10 @@ http://www.gametrailers.com/
 
 Changelog:
 ~~~~~~~~~~
-v2.3 beta 3 (Tuesday, 18 October 2011):
+v2.4 (Saturday, 25 August 2012):
+  - website changes;
+  
+v2.3 (Tuesday, 18 October 2011):
   - website changes;
 
 v2.2 (Wednesday, 2 February 2011):

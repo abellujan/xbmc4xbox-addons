@@ -35,12 +35,6 @@ class Main:
         xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=list-reviews&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30003) ), listitem=listitem, isFolder=True)
 
         #
-        # Top Media
-        #
-        listitem = xbmcgui.ListItem( __language__(30004), iconImage="DefaultFolder.png" )
-        xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=list-top20&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30004) ), listitem=listitem, isFolder=True)
-
-        #
         # Gameplay
         #
         listitem = xbmcgui.ListItem( __language__(30005), iconImage="DefaultFolder.png" )
@@ -49,8 +43,8 @@ class Main:
         #
         # Platforms
         #
-        listitem = xbmcgui.ListItem( __language__(30006), iconImage="DefaultFolder.png" )
-        xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=main-platforms&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30006) ), listitem=listitem, isFolder=True)
+        #listitem = xbmcgui.ListItem( __language__(30006), iconImage="DefaultFolder.png" )
+        #xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=main-platforms&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30006) ), listitem=listitem, isFolder=True)
 
         #
         # Channels

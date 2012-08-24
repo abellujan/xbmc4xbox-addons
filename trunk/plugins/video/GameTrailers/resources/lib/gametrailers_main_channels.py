@@ -39,6 +39,12 @@ class Main:
         #
         listitem = xbmcgui.ListItem( __language__(30073), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(IMAGES_DIR, "ScrewAttack.png" ) )
         xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=main-screwattack&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30073) ), listitem=listitem, isFolder=True)
+
+        #
+        # Pach-Attack!
+        #
+        listitem = xbmcgui.ListItem( __language__(30077), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(IMAGES_DIR, "PachAttack.png" ) )
+        xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=list-pachattack&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30077) ), listitem=listitem, isFolder=True)
         
         # Disable sorting...
         xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
