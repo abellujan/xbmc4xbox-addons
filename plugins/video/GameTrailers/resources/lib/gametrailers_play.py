@@ -11,6 +11,7 @@ import urllib
 import xbmc
 import xbmcgui
 import xml.dom.minidom
+import simplejson
 
 #
 # Main class
@@ -23,7 +24,7 @@ class Main:
 		#
 		# Constants
 		#
-		self.DEBUG                     = False
+		self.DEBUG                     = True
 		self.PLAYER_URL_RE             = re.compile( ".*/player/(\d+).html" )
 		self.EPISODE_BONUSROUND_URL_RE = re.compile( ".*/episode/bonusround/.*" )
 		self.BONUSROUND_PHP_URL_RE     = re.compile( ".*/bonusround.php\?ep=(\d+)" )
@@ -31,7 +32,9 @@ class Main:
 		self.GAMETRAILERS_TV_PLAYER_RE = re.compile( ".*/gametrailerstv_player.php?.*" )
 		self.EPISODE_GAMETRAILER_TV_RE = re.compile( ".*/episode/gametrailers-tv/.*" )
 		self.USER_MOVIES_URL_RE        = re.compile( ".*/usermovies/(\d+).html" )
-		self.MOSES_MOVIES_THUMBS       = re.compile(".*/moses/moviesthumbs/(\d+)-.*")
+		self.MOSES_MOVIES_THUMBS       = re.compile( ".*/moses/moviesthumbs/(\d+)-.*" )
+		self.VIDEOS_URL_RE             = re.compile( ".*/videos/.*" )
+		self.REVIEWS_URL_RE            = re.compile( ".*/reviews/.*")
 		
 		#
 		# Parse parameters...
@@ -108,16 +111,22 @@ class Main:
 		#
 		elif (self.USER_MOVIES_URL_RE.match( self.video_page_url ) ) :
 			video_urls = self._getVideoUrl6( self.video_page_url )
-
+		#
+		# Video page URL = /videos/1tx4bz/planetside-2-gc-2012--exclusive-beta-walkthrough--cam-
+		#
+		elif (self.VIDEOS_URL_RE.match( self.video_page_url ) or \
+			  self.REVIEWS_URL_RE.match( self.video_page_url )) :
+			video_urls = self._getVideoUrl7( self.video_page_url )
+			
 		#
 		# Check video URLs...
 		#
-		httpCommunicator = HTTPCommunicator()
-		have_valid_url   = False
-		for video_url in video_urls :
-			if httpCommunicator.exists( video_url ) :
-				have_valid_url = True
-				break
+		#httpCommunicator = HTTPCommunicator()
+		have_valid_url   = True
+		#for video_url in video_urls :
+		#	if httpCommunicator.exists( video_url ) :
+		#		have_valid_url = True
+		#		break
 		
 		#
 		# Play video...
@@ -471,6 +480,41 @@ class Main:
 		#
 		video_urls = []
 		video_urls.append( video_url )
+		return video_urls
+
+	#
+	# # Video page URL = /videos/1tx4bz/planetside-2-gc-2012--exclusive-beta-walkthrough--cam-
+	#
+	def _getVideoUrl7( self, video_page_url ):
+		video_url = None
+		
+		# 
+		# Get HTML page...
+		# 
+		httpCommunicator = HTTPCommunicator()
+		htmlData = httpCommunicator.get( video_page_url )
+				
+		# Parse HTML response...
+		beautifulSoup   = BeautifulSoup( htmlData )
+		download_button = beautifulSoup.find( "div", { "class" : "download_button" } )
+		
+		if download_button != None :
+			data_video = download_button[ "data-video" ]
+			data_token = download_button[ "data-token" ]
+		
+			# Get video URL...
+			url  = "http://www.gametrailers.com/feeds/video_download/%s/%s" % ( data_video, data_token )
+			json = simplejson.load( urllib.urlopen( url ) )
+		
+			# Video URL...
+			video_url = json[ "url" ]
+
+		#
+		# Return value
+		#
+		video_urls = []
+		if video_url != None :
+			video_urls.append( video_url )
 		return video_urls
 
 #

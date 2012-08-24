@@ -1,15 +1,15 @@
 #
 # Imports
 #
+from BeautifulSoup      import BeautifulSoup, SoupStrainer
+from gametrailers_const import __settings__, __language__
+from gametrailers_utils import HTTPCommunicator
 import os
 import sys
 import xbmc
 import xbmcgui
 import xbmcplugin
 import urllib
-from BeautifulSoup      import BeautifulSoup
-from BeautifulSoup      import SoupStrainer
-from gametrailers_utils import HTTPCommunicator
 
 #
 # Main class
@@ -20,13 +20,14 @@ class Main:
 	#
 	def __init__( self ) :
 		# Constants
-		self.DEBUG         = False
-		
+		self.IMAGES_PATH   = xbmc.translatePath( os.path.join( os.getcwd(), 'resources', 'images' ) )
+
 		# Parse parameters...
 		params                = dict(part.split('=') for part in sys.argv[ 2 ][ 1: ].split('&'))
 		self.plugin_category  = urllib.unquote_plus( params[ "plugin_category"  ] )
 		self.channel_category = urllib.unquote_plus( params[ "channel_category" ] )
-
+		self.current_page    = int ( params.get( "page", "1" ) )
+		
 		#
 		# Get videos (subcategories)
 		#
@@ -39,62 +40,49 @@ class Main:
 		# 
 		# Get HTML page...
 		#
-		httpCommunicator = HTTPCommunicator()
-		htmlData = httpCommunicator.get( "http://www.gametrailers.com/screwattack" )
-					
-		#
-		# Debug
-		#
-		if (self.DEBUG) :
-			f = open(os.path.join( xbmc.translatePath( "special://profile" ), "plugin_data", "video", sys.modules[ "__main__" ].__plugin__, "page_screwattack.html" ), "w")
-			f.write( htmlData )
-			f.close()
+		if (self.channel_category == "vault") :
+			url = "http://www.gametrailers.com/feeds/line_listing_results/video_hub/6bc9c4b7-0147-4861-9dac-7bfe8db9a141/?sortBy=most_recent&show=eb97105a-c23d-4ada-b531-900a06033d7a&currentPage=%d" % ( self.current_page )
+		elif (self.channel_category == "top10" ) :
+			url = "http://www.gametrailers.com/feeds/line_listing_results/video_hub/6bc9c4b7-0147-4861-9dac-7bfe8db9a141/?sortBy=most_recent&show=b8c65585-da14-4e61-a4bf-2e21a58abf5b&currentPage=%d" % ( self.current_page )
+		elif (self.channel_category == "nerd" ) :
+			url = "http://www.gametrailers.com/feeds/line_listing_results/video_hub/6bc9c4b7-0147-4861-9dac-7bfe8db9a141/?sortBy=most_recent&show=dd6d1e53-4b78-4c03-a749-aa4ab2547a1e&currentPage=%d" % ( self.current_page )
+		
+		htmlData      = HTTPCommunicator().get( url )
 
-		#
-		# Parse HTML response...
-		#
-		soupStrainer = SoupStrainer("div", { "class" : "screw_tab_container", "id" : self.channel_category } )
-		beautifulSoup = BeautifulSoup( htmlData, parseOnlyThese=soupStrainer )
+		# Parse response...
+		beautifulSoup = BeautifulSoup( htmlData )
 		
 		#
 		# Parse movie entries...
 		#
-		div_screw_tab_top      = beautifulSoup.find( "div", { "class" : "screw_tab_top" } )
-		divs_content_row_super = div_screw_tab_top.findAll( "div", { "class" : "content_row_super" } )
-		for div_content_row_super in divs_content_row_super:
-			div_gamepage_content_row        = div_content_row_super.find( "div", { "class" : "gamepage_content_row" } ) 
-			div_gamepage_content_row_thumb  = div_gamepage_content_row.find( "div", { "class" : "gamepage_content_row_thumb" } )
-			div_screw_content_row_info      = div_gamepage_content_row.find( "div", { "class" : "screw_content_row_info"     } )
-			div_screw_content_row_info_left = div_screw_content_row_info.find( "div", { "class" : "screw_content_row_info_left"     } )
-						
-			# Video page URL...
-			video_page_url = div_gamepage_content_row_thumb.a[ "href" ]
+		lis = beautifulSoup.findAll ( "div", { "class" : "video_information" } )
+		for li in lis :
+			div_holder = li.find ( "div", { "class" : "holder" } )
 			
-			# Thumbnail...
-			thumbnail_url  = div_gamepage_content_row_thumb.a.img[ "src" ]
+			# Title
+			h4    = div_holder.find ( "h4" )
+			title = h4.a.string.strip()
 			
-			# Title...
-			title = div_screw_content_row_info_left.span.a.string.strip()
+			# Thumbnail
+			a_thumbnail      = div_holder.find ( "a", { "class" : "thumbnail" } )
+			a_thumbnail_imgs = a_thumbnail.findAll ( "img" )
+			thumbnail_url    = a_thumbnail_imgs[ -1 ] [ "src" ]
 			
-			# Date...
-			span_gamepage_content_row_date = div_screw_content_row_info_left.find( "span", { "class" : "gamepage_content_row_date" } )
-			date = span_gamepage_content_row_date.string.strip()
-			
-			# Plot...
-			span_gamepage_content_row_text = div_screw_content_row_info_left.find( "span", { "class" : "gamepage_content_row_text" } )
-			plot = span_gamepage_content_row_text.contents[0].strip() 
+			# Video page...
+			video_page_url = a_thumbnail[ "href" ]
 			
 			# Add to list...
 			listitem        = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail_url )
-			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : date } )
+			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers" } )
 			plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
+		# Next page entry...
+		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-screwattack&plugin_category=%s&channel_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.channel_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
+
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
-		
-		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category="%s" % self.plugin_category )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )

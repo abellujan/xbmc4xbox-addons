@@ -3,7 +3,7 @@
 # GameTrailers - XBMC video plugin
 # http://www.gametrailers.com
 #
-# Version 2.3 beta 3
+# Version 2.4
 # 
 # Coding by Dan Dar3 
 # http://dandar3.blogspot.com
@@ -22,8 +22,8 @@
 __plugin__  = "GameTrailers"
 __author__  = "Dan Dar3"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "18 October 2011"
-__version__ = "2.3 beta 3"
+__date__    = "25 August 2012"
+__version__ = "2.4"
 
 #
 # Imports
@@ -99,6 +99,11 @@ elif ( "action=main-screwattack" in sys.argv[ 2 ] ):
 #
 elif ( "action=list-screwattack" in sys.argv[ 2 ] ):
     import gametrailers_list_screwattack as plugin
+#
+# Channels - Pach-Attack!
+#
+elif ( "action=list-pachattack" in sys.argv[ 2 ] ):
+    import gametrailers_list_pachattack as plugin
 #
 # Search (menu)
 #

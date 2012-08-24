@@ -3,6 +3,7 @@
 #
 from BeautifulSoup      import BeautifulSoup, SoupStrainer
 from gametrailers_const import __settings__, __language__
+from gametrailers_utils import HTTPCommunicator
 import httplib
 import os
 import re
@@ -50,14 +51,10 @@ class Main:
 		#
 		# Get HTML page...
 		#
-		params  = urllib.urlencode( {'do' : 'get_movie_page', 'type': 'newest', 'page' : self.current_page, 'loading' : 0 } )
-		headers = { "Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain" }
-		conn    = httplib.HTTPConnection("www.gametrailers.com:80")
-		conn.request( "POST", "/index_ajaxfuncs.php", params, headers )
-		response = conn.getresponse()
-		htmlData = response.read()
-		conn.close()
-				
+		
+		httpCommunicator = HTTPCommunicator()
+		htmlData		 = httpCommunicator.get("http://www.gametrailers.com/fragments/line_listing_results/video_hub/?sortBy=most_recent&currentPage=%d" %  self.current_page)
+
 		# Debug
 		if (self.DEBUG) :
 			f = open(os.path.join( xbmc.translatePath( "special://profile" ), "plugin_data", "video", sys.modules[ "__main__" ].__plugin__, "page_%i.html" % self.current_page), 'w')
@@ -65,88 +62,42 @@ class Main:
 			f.close()
 
 		# Parse response...
-		soupStrainer  = SoupStrainer( "div", { "class" : "newestlist_content" } )
-		beautifulSoup = BeautifulSoup( htmlData, soupStrainer )
+		beautifulSoup = BeautifulSoup( htmlData )
 		
 		#
 		# Parse movie entries...
 		#
-		div_newestlist = beautifulSoup.find ("div", { "class" : "newestlist_content" } )
-		tables = div_newestlist.findAll( "table" )		  		
-		for table in tables:			
-			div_newlist_thumb = table.find( "div", { "class" : "newestlist_thumb" } )
-			thumbnail_src = div_newlist_thumb.a.img[ "src" ]
-	
-			# Video URL + overlay...
-			div_newlist_movie_sd_hd = div_newlist_thumb.find( "div", { "class" : "newestlist_movie_format_SDHD" } )
-			if (div_newlist_movie_sd_hd) :
-				a_list = div_newlist_movie_sd_hd.findAll( "a" )
-				hd_movie_page_url = a_list[0][ "href" ]
-				sd_movie_page_url = a_list[1][ "href" ]
-				if (self.video_quality == "1" and hd_movie_page_url) :      # HD
-					video_page_url = hd_movie_page_url
-					overlay        = xbmcgui.ICON_OVERLAY_HD
-				else :
-					video_page_url = sd_movie_page_url                      # SD
-					overlay       = xbmcgui.ICON_OVERLAY_NONE
-			else:
-				div_newestlist_movie_sd = div_newlist_thumb.find( "div", { "class" : "newestlist_movie_format_SD" } )
-				if (div_newestlist_movie_sd) :
-					video_page_url      = div_newestlist_movie_sd.a[ "href" ]
-					overlay             = xbmcgui.ICON_OVERLAY_NONE				# SD
-				else :
-					div_newestlist_movie_hd = div_newlist_thumb.find( "div", { "class" : "newestlist_movie_format_HD" } )
-					video_page_url          = div_newestlist_movie_hd.a[ "href" ]
-					overlay                 = xbmcgui.ICON_OVERLAY_HD				# HD
+		li_list = beautifulSoup.findAll ("li")
+		for li in li_list:			
+			div_video_information = li.find( "div", { "class" : "video_information" } )
+			if (div_video_information == None) :
+				continue
 			
-			div_newestlist_info = table.find( "div", { "class" : "newestlist_info" } )
+			# Title
+			h4                    = div_video_information.find("h4")
+			h4_a                  = h4.find("a")
+			title                 = h4_a.string
 			
-		    # Game title...
-			div_newestlist_title = div_newestlist_info.find ("h3", { "class" : "newestlist_title" } )
-			game_title = div_newestlist_title.string
+			# Video page URL...
+			video_page_url        = h4_a["href"]
 			
-		    # Movie Title + Plot...
-			div_newestlist_text      = div_newestlist_info.find( "div", { "class" : "newestlist_text" } )
-			span_newestlist_subtitle = div_newestlist_text.span 
-			movie_title              = span_newestlist_subtitle.a.string
-			plot                     = div_newestlist_text.contents[1].string.strip(" -").replace("\\'", "'") 
-
-		    # Title...
-			title = game_title + " - " + movie_title
-			title = title.replace( "\\'", "'" )
-
-			# Genre...
-			div_newestlist_platimage      = div_newestlist_info.find ("div", { "class" : "newestlist_platimage" } )
-			div_newestlist_platimage_imgs = div_newestlist_platimage.findAll( "img" )
-			platforms = []
-			for div_newestlist_platimage_img in div_newestlist_platimage_imgs:
-				platforms.append( self.decodePlatform ( div_newestlist_platimage_img[ "src" ] ) )
-			genre = " / ".join(platforms)
+			div_class_holder      = div_video_information.find( "div", { "class" : "holder" } )
+			a_thumbnail           = div_class_holder.find( "a", { "class" : "thumbnail" } )
+			img_thumbnail         = a_thumbnail.findAll( "img" ) [-1]
+			thumbnail_url         = img_thumbnail[ "src" ]
 			
 			# Add to list...
-			listitem        = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail_src )
-			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers", "Plot" : plot, "Genre" : genre, "Overlay" : overlay } )
+			listitem        = xbmcgui.ListItem( title, iconImage = "DefaultVideo.png", thumbnailImage = thumbnail_url )
+			listitem.setInfo( "video", { "Title" : title, "Studio" : "GameTrailers" } )
 			plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
-		#
-		# Get the number of entries...
-		#
-		div_pagelist    = beautifulSoup.find( "div", { "class" : "pagelist_bartext" } )
-		pagelist        = div_pagelist.string.strip()
-		pagelist_result = self.PAGELIST_RE.search( pagelist )
-		entry_no_start  = pagelist_result.group(1)
-		entry_no_end    = pagelist_result.group(2)
-		
 		# Next page entry...
 		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
 		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-all&plugin_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...
 		xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_NONE )
-		
-		# Label (top-right)...
-		xbmcplugin.setPluginCategory( handle=int( sys.argv[ 1 ] ), category=( "%s   (" + __language__(30501) + ")" ) % (self.plugin_category, entry_no_start, entry_no_end) )
 		
 		# End of directory...
 		xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )
