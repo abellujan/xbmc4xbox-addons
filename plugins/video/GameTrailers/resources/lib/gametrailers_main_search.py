@@ -14,9 +14,6 @@ import xbmcplugin
 #
 class Main:
     def __init__( self ):
-        # Constants
-        IMAGES_DIR = xbmc.translatePath( os.path.join( os.getcwd(), 'resources', 'images' ) )        
-        
         #
         # Search...
         #

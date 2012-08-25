@@ -2,7 +2,7 @@
 # Imports
 #
 from BeautifulSoup      import BeautifulSoup, SoupStrainer
-from gametrailers_const import __settings__, __language__
+from gametrailers_const import __settings__, __language__, __images_path__
 from gametrailers_utils import HTTPCommunicator
 import os
 import sys
@@ -19,9 +19,6 @@ class Main:
 	# Init
 	#
 	def __init__( self ) :
-		# Constants
-		self.IMAGES_PATH   = xbmc.translatePath( os.path.join( os.getcwd(), 'resources', 'images' ) )
-
 		# Parse parameters...
 		params                = dict(part.split('=') for part in sys.argv[ 2 ][ 1: ].split('&'))
 		self.plugin_category  = urllib.unquote_plus( params[ "plugin_category"  ] )
@@ -78,7 +75,7 @@ class Main:
 			xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
 		# Next page entry...
-		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+		listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(__images_path__, 'next-page.png'))
 		xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-screwattack&plugin_category=%s&channel_category=%s&page=%i" % ( sys.argv[0], self.plugin_category, self.channel_category, self.current_page + 1 ), listitem = listitem, isFolder = True)
 
 		# Disable sorting...

@@ -1,7 +1,7 @@
 #
 # Imports
 #
-from gametrailers_const import __settings__, __language__
+from gametrailers_const import __settings__, __language__, __images_path__
 import os
 import sys
 import xbmc
@@ -13,9 +13,6 @@ import xbmcplugin
 #
 class Main:
     def __init__( self ):
-        # Constants
-        IMAGES_DIR = xbmc.translatePath( os.path.join( os.getcwd(), 'resources', 'images' ) )        
-        
         #
         # All
         #
@@ -55,7 +52,7 @@ class Main:
         #
         #  Search
         #
-        listitem = xbmcgui.ListItem( __language__(30008), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(IMAGES_DIR, "search.png" ) )
+        listitem = xbmcgui.ListItem( __language__(30008), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(__images_path__, "search.png" ) )
         xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1 ]), url = '%s?action=main-search&plugin_category=%s' % ( sys.argv[ 0 ], __language__(30008) ), listitem=listitem, isFolder=True)
 
         # Disable sorting...
