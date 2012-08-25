@@ -24,7 +24,7 @@ class Main:
 		#
 		# Constants
 		#
-		self.DEBUG                     = True
+		self.DEBUG                     = False
 		self.PLAYER_URL_RE             = re.compile( ".*/player/(\d+).html" )
 		self.EPISODE_BONUSROUND_URL_RE = re.compile( ".*/episode/bonusround/.*" )
 		self.BONUSROUND_PHP_URL_RE     = re.compile( ".*/bonusround.php\?ep=(\d+)" )
@@ -124,7 +124,7 @@ class Main:
 		# Check video URLs...
 		#
 		httpCommunicator = HTTPCommunicator()
-		have_valid_url   = True
+		have_valid_url   = False
 		for video_url in video_urls :
 			if httpCommunicator.exists( video_url ) :
 				have_valid_url = True
