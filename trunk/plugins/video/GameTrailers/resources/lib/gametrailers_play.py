@@ -35,6 +35,7 @@ class Main:
 		self.MOSES_MOVIES_THUMBS       = re.compile( ".*/moses/moviesthumbs/(\d+)-.*" )
 		self.VIDEOS_URL_RE             = re.compile( ".*/videos/.*" )
 		self.REVIEWS_URL_RE            = re.compile( ".*/reviews/.*")
+		self.FULL_EPISODES_URL_RE      = re.compile( ".*/full-episodes/.*")
 		
 		#
 		# Parse parameters...
@@ -115,18 +116,19 @@ class Main:
 		# Video page URL = /videos/1tx4bz/planetside-2-gc-2012--exclusive-beta-walkthrough--cam-
 		#
 		elif (self.VIDEOS_URL_RE.match( self.video_page_url ) or \
-			  self.REVIEWS_URL_RE.match( self.video_page_url )) :
+			  self.REVIEWS_URL_RE.match( self.video_page_url ) or \
+			  self.FULL_EPISODES_URL_RE.match( self.video_page_url )) :
 			video_urls = self._getVideoUrl7( self.video_page_url )
 			
 		#
 		# Check video URLs...
 		#
-		#httpCommunicator = HTTPCommunicator()
+		httpCommunicator = HTTPCommunicator()
 		have_valid_url   = True
-		#for video_url in video_urls :
-		#	if httpCommunicator.exists( video_url ) :
-		#		have_valid_url = True
-		#		break
+		for video_url in video_urls :
+			if httpCommunicator.exists( video_url ) :
+				have_valid_url = True
+				break
 		
 		#
 		# Play video...
@@ -486,35 +488,66 @@ class Main:
 	# # Video page URL = /videos/1tx4bz/planetside-2-gc-2012--exclusive-beta-walkthrough--cam-
 	#
 	def _getVideoUrl7( self, video_page_url ):
-		video_url = None
+		video_urls = []
 		
+		#
+		# Video format (SD or HD)...
+		#
+		rendition_size = "sd"
+		if (self.video_quality == "1" ) :
+		  rendition_size = "hd"
+
 		# 
 		# Get HTML page...
 		# 
 		httpCommunicator = HTTPCommunicator()
 		htmlData = httpCommunicator.get( video_page_url )
-				
-		# Parse HTML response...
-		beautifulSoup   = BeautifulSoup( htmlData )
-		download_button = beautifulSoup.find( "div", { "class" : "download_button" } )
 		
-		if download_button != None :
-			data_video = download_button[ "data-video" ]
-			data_token = download_button[ "data-token" ]
-		
-			# Get video URL...
-			url  = "http://www.gametrailers.com/feeds/video_download/%s/%s" % ( data_video, data_token )
-			json = simplejson.load( urllib.urlopen( url ) )
-		
-			# Video URL...
-			video_url = json[ "url" ]
+		#
+		# Parse HTML source...
+		#
+		beautifulSoup     = BeautifulSoup( htmlData )
+		media_player_info = beautifulSoup.find( "div", { "class" : "module video_information-player" } )
+		if (media_player_info != None) :
+			data_content_id = media_player_info[ "data-contentid" ]
+			
+			#
+			# Parse RSS feed (one or more video parts)...
+			#
+			url_rss  = "http://www.gametrailers.com/feeds/mrss/?uri=%s" % data_content_id
+			data_rss = HTTPCommunicator().get( url_rss ) 
+			doc_rss  = xml.dom.minidom.parseString( data_rss )
+
+			item_nodes = doc_rss.documentElement.getElementsByTagName( "item" )
+			for item_node in item_nodes :
+				# Get video parts...
+				media_group_node     = item_node.getElementsByTagName( "media:group" )[0]
+				media_category_nodes = media_group_node.getElementsByTagName( "media:category" )
+				for media_category_node in media_category_nodes :
+					if (media_category_node.attributes[ "scheme" ].nodeValue == "urn:mtvn:id" ) :
+						media_id = media_category_node.firstChild.nodeValue
+						
+						# Get video URL for part...
+						url_xml  = "http://www.gametrailers.com/feeds/mediagen/?uri=%s&forceProgressive=true&renditionSize=%s" % ( media_id, rendition_size)
+						data_xml = HTTPCommunicator().get( url_xml ) 
+						doc_xml  = xml.dom.minidom.parseString( data_xml )
+
+						# Parse XML...
+						rendition_node = doc_xml.documentElement.getElementsByTagName( "rendition" )[0]
+						src_node       = rendition_node.getElementsByTagName( "src" )[0]
+						video_url      = src_node.firstChild.nodeValue
+						
+						video_urls.append( video_url )
+						
+						# Cleanup...
+						doc_xml = None
+						
+						break
+					
 
 		#
 		# Return value
 		#
-		video_urls = []
-		if video_url != None :
-			video_urls.append( video_url )
 		return video_urls
 
 #
