@@ -44,22 +44,11 @@ class Main:
 	# Get videos...
 	#
 	def getVideos( self ) :
-		#
-		# Init
-		#
-				
-		#
+		# 
 		# Get HTML page...
 		#
-		
-		httpCommunicator = HTTPCommunicator()
-		htmlData		 = httpCommunicator.get("http://www.gametrailers.com/fragments/line_listing_results/video_hub/?sortBy=most_recent&currentPage=%d" %  self.current_page)
-
-		# Debug
-		if (self.DEBUG) :
-			f = open(os.path.join( xbmc.translatePath( "special://profile" ), "plugin_data", "video", sys.modules[ "__main__" ].__plugin__, "page_%i.html" % self.current_page), 'w')
-			f.write( htmlData )
-			f.close()
+		url           = "http://www.gametrailers.com/feeds/line_listing_results/video_hub/6bc9c4b7-0147-4861-9dac-7bfe8db9a141/?sortBy=most_recent&currentPage=%d" % ( self.current_page )
+		htmlData      = HTTPCommunicator().get( url )
 
 		# Parse response...
 		beautifulSoup = BeautifulSoup( htmlData )
@@ -67,24 +56,22 @@ class Main:
 		#
 		# Parse movie entries...
 		#
-		li_list = beautifulSoup.findAll ("li")
-		for li in li_list:			
-			div_video_information = li.find( "div", { "class" : "video_information" } )
-			if (div_video_information == None) :
-				continue
+		lis = beautifulSoup.findAll ( "div", { "class" : "video_information" } )
+		for li in lis :
+			div_holder = li.find ( "div", { "class" : "holder" } )
 			
 			# Title
-			h4                    = div_video_information.find("h4")
-			h4_a                  = h4.find("a")
-			title                 = h4_a.string
+			h3    = div_holder.find ( "h3" )
+			h4    = div_holder.find ( "h4" )
+			title = "%s - %s" % ( h3.a.string.strip(), h4.a.string.strip() )
 			
-			# Video page URL...
-			video_page_url        = h4_a["href"]
+			# Thumbnail
+			a_thumbnail      = div_holder.find ( "a", { "class" : "thumbnail" } )
+			a_thumbnail_imgs = a_thumbnail.findAll ( "img" )
+			thumbnail_url    = a_thumbnail_imgs[ -1 ] [ "src" ]
 			
-			div_class_holder      = div_video_information.find( "div", { "class" : "holder" } )
-			a_thumbnail           = div_class_holder.find( "a", { "class" : "thumbnail" } )
-			img_thumbnail         = a_thumbnail.findAll( "img" ) [-1]
-			thumbnail_url         = img_thumbnail[ "src" ]
+			# Video page...
+			video_page_url = a_thumbnail[ "href" ]
 			
 			# Add to list...
 			listitem        = xbmcgui.ListItem( title, iconImage = "DefaultVideo.png", thumbnailImage = thumbnail_url )
