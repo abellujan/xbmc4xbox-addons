@@ -215,7 +215,7 @@ class Main:
                 # Analyse ZIP entry...
                 #
                 ( dir, file ) = os.path.split( zip_entry )
-                if dir == "BUILD" :
+                if dir == "BUILD" or dir == "XBMC" :
                     dir = ""
                 if dir.startswith( "BUILD/" ) :
                     dir = dir.replace( "BUILD/", "" )
