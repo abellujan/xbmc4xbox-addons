@@ -41,18 +41,15 @@ class Main:
         #
         html2text     = HTML2Text()
 
-        # Xbox only (anyways)
-        html_url = "http://www.xbmc4xbox.org.uk/nightly/"            
+        # 
+        html_url = "http://dl.dropbox.com/sh/8mcip8xsfe1zjap/63kY0bCYgl/latest.txt"            
         
         #
         # Get RSS feed...
         #
         try :
             httpCommunicator = HTTPCommunicator()
-            htmlData         = httpCommunicator.get( html_url )
-            
-            soupStrainer     = SoupStrainer( "pre" )
-            beautifulSoup    = BeautifulSoup( htmlData, soupStrainer )
+            text             = httpCommunicator.get( html_url )
         except Exception, e :
             title = "%s - %s" % ( xbmc.getLocalizedString(30000), xbmc.getLocalizedString(257).upper() )
             xbmcgui.Dialog().ok( title, html_url, str(e) )
@@ -60,9 +57,10 @@ class Main:
         
         
         #
-        # Parse XML...
+        # Parse text...
         #
-        for a_node in beautifulSoup.findAll( "a" ):
+        urls = text.split('\n')
+        for url in urls:
             #
             # Init
             #
@@ -74,36 +72,30 @@ class Main:
             #
             # Parse entry details...
             #
-            title = a_node.text
-            if (title == "../") :
-                continue
+            title = url
 
             # Title
-            revision = title[ title.rfind("r") + 1 : ].replace( ".zip", "" )
-            title    = "XBMC4Xbox [COLOR=FFe2ff43]r%s[/COLOR]" % ( revision )
+            revision = title[ title.rfind("XBMC4XBOX") : ].replace( ".zip", "" )
+            title    = "[COLOR=FFe2ff43]%s[/COLOR]" % ( revision )
             
             # Link
-            link     = html_url + a_node[ "href" ]
+            link     = url
             
             # Date
-            text_after_a_node = a_node.nextSibling.string.strip()
-            pubDate           = text_after_a_node[ : text_after_a_node.find(" ") ]
-            date_elements     = time.strptime(pubDate, "%d-%b-%Y")
-            date              = "%02u-%02u-%04u" % ( date_elements[2], date_elements[1], date_elements[0] )
+            #pubDate           = text_after_a_node[ : text_after_a_node.find(" ") ]
+            #date_elements     = time.strptime(pubDate, "%d-%b-%Y")
+            #date              = "%02u-%02u-%04u" % ( date_elements[2], date_elements[1], date_elements[0] )
                         
             # Description
-            description       = text_after_a_node + "\n\n" + link
+            description       = ""
             
             #
             # View build URL...
             #
-            view_build_url = "%s?action=build-view&title=%s&date=%s&revision=%s&link=%s&description=%s" % \
+            view_build_url = "%s?action=build-view&title=%s&link=%s" % \
                             ( sys.argv[0], 
                               title,
-                              urllib.quote_plus( date ),
-                              revision,
-                              urllib.quote_plus( link ),
-                              urllib.quote_plus( description) )
+                              urllib.quote_plus( link ) )
 
             #
             # Add directory entry...
@@ -134,7 +126,7 @@ class Main:
         #
         # Sorting...
         #
-        xbmcplugin.addSortMethod( int( sys.argv[ 1 ]), sortMethod=xbmcplugin.SORT_METHOD_DATE )
+        xbmcplugin.addSortMethod( int( sys.argv[ 1 ]), sortMethod=xbmcplugin.SORT_METHOD_NONE )
 
         # End of directory...
         xbmcplugin.endOfDirectory( handle=int( sys.argv[ 1 ] ), succeeded=True )        

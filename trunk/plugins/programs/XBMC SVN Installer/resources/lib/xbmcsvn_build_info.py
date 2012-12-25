@@ -25,10 +25,7 @@ class GUI( xbmcgui.WindowXMLDialog ):
         
         # Prepare parameter values...
         self.title           = urllib.unquote_plus( self.params[ "title" ] )
-        self.date            = urllib.unquote_plus( self.params[ "date" ] )
-        self.revision        = urllib.unquote_plus( self.params[ "revision" ] )
         self.link            = urllib.unquote_plus( self.params[ "link" ] )
-        self.description     = urllib.unquote_plus( self.params[ "description" ] )
         
         # Show dialog window...
         xbmcgui.WindowXML.__init__( self )
@@ -41,13 +38,8 @@ class GUI( xbmcgui.WindowXMLDialog ):
         # Name
         self.getControl( self.TITLE_CONTROL_ID ).setLabel( self.title )
         
-        # Date
-        self.date_format  = xbmc.getRegion( "datelong" ).replace( "DDDD", "%a" ).replace( "D", "%d" ).replace( "MMMM", "%b" ).replace("YYYY", "%Y").strip()
-        self.date_display = datetime.date  ( int( self.date.split( "-" )[ 2 ] ), int( self.date.split( "-" )[ 1 ] ), int( self.date.split( "-" )[ 0 ] ) ).strftime( self.date_format ) 
-        self.getControl( self.DATE_CONTROL_ID ).setLabel( self.date_display)                                          # Date
-
         # Description
-        self.getControl( self.DESCRIPTION_CONTROL_ID ).setText ( self.description )                                  # Description
+        self.getControl( self.DESCRIPTION_CONTROL_ID ).setText ( self.link )                                         # Description
 
         # Install / Cancel
         self.getControl( self.DOWNLOAD_CONTROL_ID ).setLabel( xbmc.getLocalizedString( 30500 ) )                     # Download
@@ -61,20 +53,16 @@ class GUI( xbmcgui.WindowXMLDialog ):
         if ( controlId == self.DOWNLOAD_CONTROL_ID ) :
             self.close()
             
-            xbmc.executebuiltin( "XBMC.RunPlugin(%s?action=build-download&title=%s&date=%s&revision=%s&link=%s)" % \
+            xbmc.executebuiltin( "XBMC.RunPlugin(%s?action=build-download&title=%s&link=%s)" % \
                 ( sys.argv[ 0 ], urllib.quote_plus( self.title ), 
-                                 urllib.quote_plus( self.date ),
-                                 urllib.quote_plus( self.revision ),
                                  urllib.quote_plus( self.link ) ) )
             
         # Install
         if ( controlId == self.INSTALL_CONTROL_ID ) :
             self.close()
 
-            xbmc.executebuiltin( "XBMC.RunPlugin(%s?action=build-install&title=%s&date=%s&revision=%s&link=%s)" % \
+            xbmc.executebuiltin( "XBMC.RunPlugin(%s?action=build-install&title=%s&link=%s)" % \
                 ( sys.argv[ 0 ], urllib.quote_plus( self.title ), 
-                                 urllib.quote_plus( self.date ),
-                                 urllib.quote_plus( self.revision ),
                                  urllib.quote_plus( self.link ) ) )
         
 
