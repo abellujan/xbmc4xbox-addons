@@ -219,6 +219,8 @@ class Main:
                     dir = ""
                 if dir.startswith( "BUILD/" ) :
                     dir = dir.replace( "BUILD/", "" )
+                if dir.startswith( "XBMC/" ) :
+                    dir = dir.replace( "XBMC/", "" )
                 
                 #
                 # Create sub-directory (if doesn't exist already)...
