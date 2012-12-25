@@ -69,7 +69,7 @@ class Main:
         # Install build...
         #
         if self.action == "build-install" and os.path.isfile( self.zip ) :
-            build_dir = os.path.dirname(self.link).replace( ".zip", "" )
+            build_dir = os.path.basename(self.link).replace( ".zip", "" )
             self.install_build( self.zip, self.install_path, build_dir )
 
     #
