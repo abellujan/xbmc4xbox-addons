@@ -1,9 +1,8 @@
 ##############################################################################
 #
 # XBMC SVN Installer - Program plugin for XBMC
-# http://www.xbmcsvn.com/
 #
-# Version 2.1
+# Version 2.2
 # 
 # Author(s):
 #
@@ -12,8 +11,7 @@
 #
 # Credits:
 #
-#  * Team XBMC4Xbox                                  [ http://xbmc4xbox.org ]
-#  * The Questor        <thequestor@gmail.com>       [ http://wwww.xbmcsvn.com/ ]
+#  * Team XBMC4Xbox                                  [ http://http://www.xbmc4xbox.org.uk ]
 #  * Nuka1195 / BigBellyBilly (T3CH Upgrader Script)
 #
 
@@ -23,8 +21,8 @@
 __plugin__  = "XBMC SVN Installer"
 __author__  = "Dan Dar3 <dan.dar33@gmail.com>"
 __url__     = "http://dandar3.blogspot.com"
-__date__    = "15 July 2012"
-__version__ = "2.1"
+__date__    = "25 December 2012"
+__version__ = "2.2"
 
 #
 # Imports

@@ -1,6 +1,9 @@
 XBMC SVN Installer
 ~~~~~~~~~~~~~~~~~~
 
+v2.2 (Tue, 25 Dec 2012):
+ - Nighly builds from Dropbox (thanks to B4K3D PI)
+
 v2.1 (Sunday, 15 July 2012)
  - Nightly builds location: http://www.xbmc4xbox.org.uk/nightly/
 

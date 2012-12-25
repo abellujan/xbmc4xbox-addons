@@ -30,8 +30,6 @@ class Main:
         #
         self.action   = urllib.unquote_plus ( params[ "action" ] )
         self.title    = urllib.unquote_plus ( params[ "title" ] )
-        self.date     = urllib.unquote_plus ( params[ "date" ] )
-        self.revision = urllib.unquote_plus ( params[ "revision" ] )
         self.link     = urllib.unquote_plus ( params[ "link" ] )
         
         #
@@ -56,8 +54,7 @@ class Main:
         #
         # Prepare zip name / location...
         #
-        date_elements = self.date.split("-")      
-        self.zip      = "SVN%s%s%s_%s.zip" % ( date_elements[2], date_elements[1], date_elements[0], self.revision )
+        self.zip      = os.path.basename(self.link)
         self.zip      = os.path.join( self.install_path, self.zip )
         
         #
@@ -72,7 +69,7 @@ class Main:
         # Install build...
         #
         if self.action == "build-install" and os.path.isfile( self.zip ) :
-            build_dir = "XBMC_%s%s%s_%s" % ( date_elements[2], date_elements[1], date_elements[0], self.revision )
+            build_dir = os.path.dirname(self.link).replace( ".zip", "" )
             self.install_build( self.zip, self.install_path, build_dir )
 
     #
