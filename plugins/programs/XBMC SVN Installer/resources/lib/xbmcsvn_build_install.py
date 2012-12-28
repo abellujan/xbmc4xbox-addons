@@ -102,7 +102,8 @@ class Main:
         
             urllib._urlopener = AppURLopener()        
             urllib.urlretrieve( build_link, build_zip, lambda nb, bs, fs, url=build_link : self.download_progress_hook( nb, bs, fs, build_zip, dp ) )        
-        except :
+        except Exception, e:
+            print str(e)
             success = False
         
         # Cleanup...
