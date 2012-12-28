@@ -59,7 +59,7 @@ class Main:
         #
         # Parse text...
         #
-        urls = text.split('\n')
+        urls = text.splitlines()
         for url in urls:
             #
             # Init
