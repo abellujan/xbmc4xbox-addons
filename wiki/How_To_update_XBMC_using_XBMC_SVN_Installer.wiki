@@ -1,4 +1,4 @@
-#summary How to install XBMC using XBMC SVN Installer
+#summary How to install XBMC4Xbox using XBMC SVN Installer
 #labels Featured,Phase-Support
 
 ==1. Downloading and installing a new XBMC==
