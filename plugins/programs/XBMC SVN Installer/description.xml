@@ -42,7 +42,7 @@
     </tags>
 
     <!-- minimum revision of xbmc your addon will run on.  Leave blank all for revisions-->
-    <minrevision>30559</minrevision>
+    <minrevision></minrevision>
 
     <!--patforms compatible with your addon.   xbox, osx, windows, linux, or all -->
     <platforms>
