@@ -8,9 +8,9 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import urllib
-from xbmcsvn_utils import HTTPCommunicator
-from xbmcsvn_utils import HTML2Text
-import xbmcsvn_utils
+from xbmc4xbox_utils import HTTPCommunicator
+from xbmc4xbox_utils import HTML2Text
+import xbmc4xbox_utils
 
 #
 # Main class
@@ -44,9 +44,9 @@ class Main:
         os_platform   = os.getenv("OS")
 
         if os_platform == "xbox" :
-            xbmc_revision = int( xbmcsvn_utils.XBMC_BUILD_VERSION[xbmcsvn_utils.XBMC_BUILD_VERSION.rfind('r') + 1 : ] )
+            xbmc_revision = int( xbmc4xbox_utils.XBMC_BUILD_VERSION[xbmc4xbox_utils.XBMC_BUILD_VERSION.rfind('r') + 1 : ] )
         else :
-            xbmc_revision = int( xbmcsvn_utils.XBMC_BUILD_VERSION.split(' ')[1][1:] )            
+            xbmc_revision = int( xbmc4xbox_utils.XBMC_BUILD_VERSION.split(' ')[1][1:] )            
         
         #
         # Debug

@@ -20,7 +20,7 @@
     <type>10</type>
 
     <!-- (required) Title -->
-    <title>XBMC SVN Installer</title>
+    <title>XBMC4Xbox Installer</title>
 
     <!-- (required) Major.minor.build -->
     <version>2.2</version>
@@ -31,10 +31,10 @@
     </authors>
 
     <!-- (required) Short description of addon. -->
-    <summary>XBMC news, skins and builds installer from XBMCSVN.com</summary>
+    <summary>Install XBMC4Xbox nightly and stable builds.</summary>
 
     <!-- Longer descrption of addon.  Usage instructions should go here if required. -->
-    <description>XBMC news, skins and builds installer from XBMCSVN.com</description>
+    <description>Install XBMC4Xbox nightly and stable builds.</description>
 
     <!-- user defined tags e.g. <tags><tag>Example</tag></tags> -->
     <tags>

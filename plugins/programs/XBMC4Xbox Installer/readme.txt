@@ -1,4 +1,4 @@
-XBMC SVN Installer
+XBMC4Xbox Installer
 ~~~~~~~~~~~~~~~~~~
 
 v2.2 (Tue, 25 Dec 2012):
