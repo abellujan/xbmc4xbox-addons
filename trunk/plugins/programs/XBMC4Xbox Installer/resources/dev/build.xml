@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!-- Build file for XBMC SVN Installer - XBMC program plugin -->
-<project name="XBMC SVN Installer" default="package" basedir=".">
+<!-- Build file for XBMC4Xbox Installer - program plugin -->
+<project name="XBMC4Xbox Installer" default="package" basedir=".">
 	<!--
 	 * Variables
 	 -->

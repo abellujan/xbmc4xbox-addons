@@ -11,9 +11,9 @@ import urllib
 import time
 import datetime
 from BeautifulSoup import BeautifulSoup, SoupStrainer
-from xbmcsvn_utils import HTTPCommunicator
-from xbmcsvn_utils import HTML2Text
-import xbmcsvn_utils
+from xbmc4xbox_utils import HTTPCommunicator
+from xbmc4xbox_utils import HTML2Text
+import xbmc4xbox_utils
 
 #
 # Main class
@@ -121,7 +121,7 @@ class Main:
         #
         # Show current XBMC version (notification)
         #
-        xbmc.executebuiltin( "XBMC.Notification(XBMC4Xbox,%s (%s),10000)" % ( xbmcsvn_utils.XBMC_BUILD_VERSION, xbmcsvn_utils.XBMC_BUILD_DATE ) )
+        xbmc.executebuiltin( "XBMC.Notification(XBMC4Xbox,%s (%s),10000)" % ( xbmc4xbox_utils.XBMC_BUILD_VERSION, xbmc4xbox_utils.XBMC_BUILD_DATE ) )
         
         #
         # Sorting...

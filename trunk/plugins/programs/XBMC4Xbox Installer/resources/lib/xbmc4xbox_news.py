@@ -7,8 +7,8 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import traceback
-from xbmcsvn_utils import HTTPCommunicator
-from xbmcsvn_utils import HTMLStripper
+from xbmc4xbox_utils import HTTPCommunicator
+from xbmc4xbox_utils import HTMLStripper
 
 #
 # Main class
