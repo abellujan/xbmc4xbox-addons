@@ -31,7 +31,7 @@ Press OK to continue with the extraction (note the build was downloaded in the i
 
 [http://xbmc4xbox-addons.googlecode.com/svn/wiki/images/XBMC%20SVN%20Installer/Builds%20-%20Step%201.2d.png]
 
-Extraction finished you will be presented with a choice - *upgrade* install (transfer your UserData, skins, scripts and plugins) or a *fresh* install (no data is transfered, you will be running a bare build).
+Extraction finished you will be presented with a choice - *upgrade* install (transfer your [http://www.xbmc4xbox.org.uk/wiki/UserData UserData], skins, scripts and plugins) or a *fresh* install (no data is transfered, you will be running a bare build).
 
 [http://xbmc4xbox-addons.googlecode.com/svn/wiki/images/XBMC%20SVN%20Installer/Builds%20-%20Step%201.2e.png]
 
